@@ -12,6 +12,7 @@ class AttendancePage extends StatefulWidget {
   final List<String> students;
   final bool isGroupLesson;
   final Map<String, dynamic>? groupData;
+  final bool isteacher;
 
   const AttendancePage({
     super.key,
@@ -22,7 +23,9 @@ class AttendancePage extends StatefulWidget {
     this.displayLesson,
     required this.students,
     this.isGroupLesson = false,
-    this.groupData,
+    this.groupData, 
+    this.isteacher = false
+    
   });
 
   @override
@@ -128,7 +131,8 @@ class _AttendancePageState extends State<AttendancePage> {
             .map((x) => Map<String, dynamic>.from(x as Map))
             .toList();
 
-        loadedAttendance = allLoaded.where((a) => currentStudents.contains(a['name'])).toList();
+        loadedAttendance = allLoaded.where((a) => currentStudents.contains(a['name']))
+        .toList();
       }
 
       for (var student in currentStudents) {
@@ -277,11 +281,9 @@ class _AttendancePageState extends State<AttendancePage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final displayTitle = widget.displayLesson ?? widget.lesson.replaceAll('lesson', 'Урок ');
-
     final title = widget.isGroupLesson && selectedGroup != null
         ? '$displayTitle — Группа $selectedGroup'
         : displayTitle;
-
     final presentCount = attendance.where((a) => a['present'] == true).length;
     final absentCount = attendance.where((a) => a['absent'] == true).length;
     final sickCount = attendance.where((a) => a['sick'] == true).length;
@@ -291,7 +293,9 @@ class _AttendancePageState extends State<AttendancePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('$title - ${_getMonthName(widget.month)} ${widget.date}'),
-        backgroundColor: selectedGroup == '1' ? Colors.blueAccent : Colors.purpleAccent,
+        backgroundColor: selectedGroup == '1' 
+        ? Colors.blueAccent 
+        : Colors.purpleAccent,
         actions: [
           // Кнопка смены группы
           if (widget.isGroupLesson && selectedGroup != null)
@@ -300,6 +304,7 @@ class _AttendancePageState extends State<AttendancePage> {
               tooltip: 'Сменить группу',
               onPressed: _switchGroup,
             ),
+            if(!widget.isteacher)
           IconButton(
             icon: const Icon(Icons.save, color: Colors.white),
             tooltip: 'Сохранить',
@@ -354,9 +359,10 @@ class _AttendancePageState extends State<AttendancePage> {
                           _iconButton(record['sick'], Icons.sick, Colors.orange, () => _toggleAttendance(index, 'sick')),
                           _iconButton(record['documented'], Icons.description, Colors.blue, () => _toggleAttendance(index, 'documented')),
                           record['lateTime'] == null
-                              ? IconButton(icon: const Icon(Icons.access_time), onPressed: () => _setLateTime(index))
+                              ? IconButton(icon: const Icon(Icons.access_time), 
+                              onPressed: () => widget.isteacher ? null :_setLateTime(index))
                               : GestureDetector(
-                                  onTap: () => _editOrRemoveLateTime(index),
+                                  onTap: () => widget.isteacher ? null : _editOrRemoveLateTime(index),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                     decoration: BoxDecoration(color: Colors.purple[100], borderRadius: BorderRadius.circular(20)),
@@ -376,7 +382,7 @@ class _AttendancePageState extends State<AttendancePage> {
   Widget _iconButton(bool active, IconData icon, Color color, VoidCallback onTap) {
     return IconButton(
       icon: Icon(icon, color: active ? color : Colors.grey),
-      onPressed: onTap,
+      onPressed: widget.isteacher ? null : onTap,
     );
   }
 
