@@ -12,11 +12,17 @@ import 'package:norm_journal/data/repository/schedule_repository.dart';
 class CalendarPage extends StatefulWidget {
   final Function(Locale) changeLanguage;
   final ScheduleRepository scheduleRepository;
+  final bool isTeacher;
+  final List<String> teacherSubjects; 
+  final String? monitorId;
 
   const CalendarPage({
     super.key, 
     required this.changeLanguage, 
-    required this.scheduleRepository});
+    required this.scheduleRepository,
+    this.isTeacher = false,
+    this.teacherSubjects = const [],
+    this.monitorId,});
   
   @override
   State<CalendarPage> createState() => _CalendarPageState();
@@ -178,6 +184,7 @@ Future<void> _checkHasSchedule() async {
         ),
         child: Column(
           children: [
+            if(!widget.isTeacher)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -192,33 +199,33 @@ Future<void> _checkHasSchedule() async {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
                       elevation: 5,
                     ),
-                    child: const Text('Set Student List', style: TextStyle(color: Colors.white)),
+                    child: const 
+                    Text('Set Student List', 
+                    style: TextStyle(color: Colors.white)),
                   ),
                   ElevatedButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SchedulePage(
-        scheduleRepository: widget.scheduleRepository,
-      )),
-    ).then((_) async {
-      await _checkHasSchedule();
-      _loadScheduleChangeDays();
-    });
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-    elevation: 5,
-  ),
-  child: Text(
-    hasSchedule ? 'Change Schedule' : 'Set Schedule',
-    style: const TextStyle(color: Colors.white),
-  ),
-),
+                  onPressed: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SchedulePage(
+                  scheduleRepository: widget.scheduleRepository,)),
+                    ).then((_) async {
+                     await _checkHasSchedule();
+                    _loadScheduleChangeDays();});
+                        },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    elevation: 5,),
+                    child: Text(
+                    hasSchedule ? 'Change Schedule' : 'Set Schedule',
+                          style: const TextStyle(color: Colors.white),
+                          ),
+                  ),
 
                 ],
               ),
@@ -265,6 +272,8 @@ Future<void> _checkHasSchedule() async {
                               scheduleRepository: widget.scheduleRepository,
                               selectedDate: date,
                               students: students,
+                              isTeacher: widget.isTeacher,
+                              teacherSubjects: widget.teacherSubjects,
                             ),
                           ),
                         );
