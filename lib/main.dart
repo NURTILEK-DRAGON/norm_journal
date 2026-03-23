@@ -7,10 +7,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'package:norm_journal/data/data_source/local_schedule_data_source.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   final scheduleRepository = ScheduleRepository(LocalScheduleDataSource(),);
   final bool registered = await UserPreferences.isRegistered();
