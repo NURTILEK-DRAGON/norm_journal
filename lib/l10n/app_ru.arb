@@ -1,0 +1,194 @@
+{
+  "@@locale": "ru",
+  "createStudentListTitle": "Создать список учеников",
+  "@createStudentListTitle": {
+    "description": "Title for the student list creation page"
+  },
+  "addStudentLabel": "Добавить имя ученика",
+  "@addStudentLabel": {
+    "description": "Label for the text field to add a student name"
+  },
+  "addButton": "Добавить",
+  "@addButton": {
+    "description": "Button text for adding a student"
+  },
+  "saveAndProceedButton": "Сохранить и продолжить",
+  "@saveAndProceedButton": {
+    "description": "Button text for saving the student list and proceeding"
+  },
+  "schedulePageTitle": "Страница расписания",
+  "@schedulePageTitle": {
+    "description": "Title for the schedule page"
+  },
+  "scheduleFor": "Расписание для",
+  "@scheduleFor": {
+    "description": "Label for the schedule day"
+  },
+  "addLessonButton": "Добавить урок",
+  "@addLessonButton": {
+    "description": "Button text for adding a lesson"
+  },
+  "saveLessonsButton": "Сохранить уроки",
+  "@saveLessonsButton": {
+    "description": "Button text for saving lessons"
+  },
+  "expelStudentButton": "Исключить ученика",
+  "@expelStudentButton": {
+    "description": "Button text for expelling a student"
+  },
+  "expelStudentTitle": "Исключить ученика",
+  "@expelStudentTitle": {
+    "description": "Title for the expel student page"
+  },
+  "lessonsFor": "Уроки -",
+  "@lessonsFor": {
+    "description": "Prefix for lessons on a specific date"
+  },
+  "noLessonsToday": "Нет уроков в этот день",
+  "@noLessonsToday": {
+    "description": "Message when there are no lessons on a selected day"
+  },
+  "presentLabel": "Присутствует",
+  "@presentLabel": {
+    "description": "Label for present attendance status"
+  },
+  "absentLabel": "Отсутствует",
+  "@absentLabel": {
+    "description": "Label for absent attendance status"
+  },
+  "sickLabel": "Болен",
+  "@sickLabel": {
+    "description": "Label for sick attendance status"
+  },
+  "documentedLabel": "Документировано",
+  "@documentedLabel": {
+    "description": "Label for documented absence status"
+  },
+  "lateLabel": "Опоздал",
+  "@lateLabel": {
+    "description": "Label for late attendance status"
+  },
+  "editLateTimeTitle": "Редактировать время опоздания",
+  "@editLateTimeTitle": {
+    "description": "Title for the edit late time dialog"
+  },
+  "editTimeButton": "Редактировать время",
+  "@editTimeButton": {
+    "description": "Button text for editing late time"
+  },
+  "removeTimeButton": "Удалить время",
+  "@removeTimeButton": {
+    "description": "Button text for removing late time"
+  },
+  "cancelButton": "Отмена",
+  "@cancelButton": {
+    "description": "Button text for canceling an action"
+  },
+  "weekday0": "Вс",
+  "@weekday0": {
+    "description": "Abbreviation for Sunday"
+  },
+  "weekday1": "Пн",
+  "@weekday1": {
+    "description": "Abbreviation for Monday"
+  },
+  "weekday2": "Вт",
+  "@weekday2": {
+    "description": "Abbreviation for Tuesday"
+  },
+  "weekday3": "Ср",
+  "@weekday3": {
+    "description": "Abbreviation for Wednesday"
+  },
+  "weekday4": "Чт",
+  "@weekday4": {
+    "description": "Abbreviation for Thursday"
+  },
+  "weekday5": "Пт",
+  "@weekday5": {
+    "description": "Abbreviation for Friday"
+  },
+  "weekday6": "Сб",
+  "@weekday6": {
+    "description": "Abbreviation for Saturday"
+  },
+  "month01": "Январь",
+  "@month01": {
+    "description": "Name of the month January"
+  },
+  "month02": "Февраль",
+  "@month02": {
+    "description": "Name of the month February"
+  },
+  "month03": "Март",
+  "@month03": {
+    "description": "Name of the month March"
+  },
+  "month04": "Апрель",
+  "@month04": {
+    "description": "Name of the month April"
+  },
+  "month05": "Май",
+  "@month05": {
+    "description": "Name of the month May"
+  },
+  "month06": "Июнь",
+  "@month06": {
+    "description": "Name of the month June"
+  },
+  "month07": "Июль",
+  "@month07": {
+    "description": "Name of the month July"
+  },
+  "month08": "Август",
+  "@month08": {
+    "description": "Name of the month August"
+  },
+  "month09": "Сентябрь",
+  "@month09": {
+    "description": "Name of the month September"
+  },
+  "month10": "Октябрь",
+  "@month10": {
+    "description": "Name of the month October"
+  },
+  "month11": "Ноябрь",
+  "@month11": {
+    "description": "Name of the month November"
+  },
+  "month12": "Декабрь",
+  "@month12": {
+    "description": "Name of the month December"
+  },
+  "confirmDeleteTitle": "Подтверждение удаления",
+  "@confirmDeleteTitle": {
+    "description": "Title for the delete confirmation dialog"
+  },
+  "confirmDeleteMessage": "Вы уверены, что хотите удалить {studentName}?",
+  "@confirmDeleteMessage": {
+    "description": "Message for the delete confirmation dialog",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "deleteButton": "Удалить",
+  "@deleteButton": {
+    "description": "Button text for confirming deletion"
+  },
+  "removeStudentButton": "Удалить студента",
+  "@removeStudentButton": {
+    "description": "Button text for removing a student"
+  },
+  "editStudentName": "Редактировать имя студента",
+  "@editStudentName": {
+    "description": "Title for the edit student name dialog"
+  },
+  "saveButton": "Сохранить",
+  "@saveButton": {
+    "description": "Button text for saving changes"
+  },
+  "editLessonTitle": "Редактировать урок",
+"@editLessonTitle": {
+  "description": "Title for the edit lesson dialog"
+}
+}

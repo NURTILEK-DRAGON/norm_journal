@@ -1,0 +1,194 @@
+{
+  "@@locale": "en",
+  "createStudentListTitle": "Create Student List",
+  "@createStudentListTitle": {
+    "description": "Title for the student list creation page"
+  },
+  "addStudentLabel": "Add Student Name",
+  "@addStudentLabel": {
+    "description": "Label for the text field to add a student name"
+  },
+  "addButton": "Add",
+  "@addButton": {
+    "description": "Button text for adding a student"
+  },
+  "saveAndProceedButton": "Save and Proceed",
+  "@saveAndProceedButton": {
+    "description": "Button text for saving the student list and proceeding"
+  },
+  "schedulePageTitle": "Schedule Page",
+  "@schedulePageTitle": {
+    "description": "Title for the schedule page"
+  },
+  "scheduleFor": "Schedule for",
+  "@scheduleFor": {
+    "description": "Label for the schedule day"
+  },
+  "addLessonButton": "Add Lesson",
+  "@addLessonButton": {
+    "description": "Button text for adding a lesson"
+  },
+  "saveLessonsButton": "Save Lessons",
+  "@saveLessonsButton": {
+    "description": "Button text for saving lessons"
+  },
+  "expelStudentButton": "Expel Student",
+  "@expelStudentButton": {
+    "description": "Button text for expelling a student"
+  },
+  "expelStudentTitle": "Expel Student",
+  "@expelStudentTitle": {
+    "description": "Title for the expel student page"
+  },
+  "lessonsFor": "Lessons -",
+  "@lessonsFor": {
+    "description": "Prefix for lessons on a specific date"
+  },
+  "noLessonsToday": "No lessons on this day",
+  "@noLessonsToday": {
+    "description": "Message when there are no lessons on a selected day"
+  },
+  "presentLabel": "Present",
+  "@presentLabel": {
+    "description": "Label for present attendance status"
+  },
+  "absentLabel": "Absent",
+  "@absentLabel": {
+    "description": "Label for absent attendance status"
+  },
+  "sickLabel": "Sick",
+  "@sickLabel": {
+    "description": "Label for sick attendance status"
+  },
+  "documentedLabel": "Documented",
+  "@documentedLabel": {
+    "description": "Label for documented absence status"
+  },
+  "lateLabel": "Late",
+  "@lateLabel": {
+    "description": "Label for late attendance status"
+  },
+  "editLateTimeTitle": "Edit Late Time",
+  "@editLateTimeTitle": {
+    "description": "Title for the edit late time dialog"
+  },
+  "editTimeButton": "Edit Time",
+  "@editTimeButton": {
+    "description": "Button text for editing late time"
+  },
+  "removeTimeButton": "Remove Time",
+  "@removeTimeButton": {
+    "description": "Button text for removing late time"
+  },
+  "cancelButton": "Cancel",
+  "@cancelButton": {
+    "description": "Button text for canceling an action"
+  },
+  "weekday0": "Sun",
+  "@weekday0": {
+    "description": "Abbreviation for Sunday"
+  },
+  "weekday1": "Mon",
+  "@weekday1": {
+    "description": "Abbreviation for Monday"
+  },
+  "weekday2": "Tue",
+  "@weekday2": {
+    "description": "Abbreviation for Tuesday"
+  },
+  "weekday3": "Wed",
+  "@weekday3": {
+    "description": "Abbreviation for Wednesday"
+  },
+  "weekday4": "Thu",
+  "@weekday4": {
+    "description": "Abbreviation for Thursday"
+  },
+  "weekday5": "Fri",
+  "@weekday5": {
+    "description": "Abbreviation for Friday"
+  },
+  "weekday6": "Sat",
+  "@weekday6": {
+    "description": "Abbreviation for Saturday"
+  },
+  "month01": "January",
+  "@month01": {
+    "description": "Name of the month January"
+  },
+  "month02": "February",
+  "@month02": {
+    "description": "Name of the month February"
+  },
+  "month03": "March",
+  "@month03": {
+    "description": "Name of the month March"
+  },
+  "month04": "April",
+  "@month04": {
+    "description": "Name of the month April"
+  },
+  "month05": "May",
+  "@month05": {
+    "description": "Name of the month May"
+  },
+  "month06": "June",
+  "@month06": {
+    "description": "Name of the month June"
+  },
+  "month07": "July",
+  "@month07": {
+    "description": "Name of the month July"
+  },
+  "month08": "August",
+  "@month08": {
+    "description": "Name of the month August"
+  },
+  "month09": "September",
+  "@month09": {
+    "description": "Name of the month September"
+  },
+  "month10": "October",
+  "@month10": {
+    "description": "Name of the month October"
+  },
+  "month11": "November",
+  "@month11": {
+    "description": "Name of the month November"
+  },
+  "month12": "December",
+  "@month12": {
+    "description": "Name of the month December"
+  },
+  "confirmDeleteTitle": "Confirm Delete",
+  "@confirmDeleteTitle": {
+    "description": "Title for the delete confirmation dialog"
+  },
+  "confirmDeleteMessage": "Are you sure you want to delete {studentName}?",
+  "@confirmDeleteMessage": {
+    "description": "Message for the delete confirmation dialog",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "deleteButton": "Delete",
+  "@deleteButton": {
+    "description": "Button text for confirming deletion"
+  },
+  "removeStudentButton": "Remove Student",
+  "@removeStudentButton": {
+    "description": "Button text for removing a student"
+  },
+  "editStudentName": "Edit Student Name",
+  "@editStudentName": {
+    "description": "Title for the edit student name dialog"
+  },
+  "saveButton": "Save",
+  "@saveButton": {
+    "description": "Button text for saving changes"
+  },
+   "editLessonTitle" : "Edit Lesson",
+   "@editLessonTitle": {
+     "description": "Title for the edit lesson dialog"
+  }
+}
