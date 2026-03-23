@@ -4,11 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:norm_journal/constant_subjects.dart';
 class DaySchedulePage extends StatefulWidget {
   final String day;
   final List<String> currentLessons;
 
-  const DaySchedulePage({super.key, required this.day, required this.currentLessons});
+  const DaySchedulePage({super.key, 
+  required this.day, 
+  required this.currentLessons});
 
   @override
   State<DaySchedulePage> createState() => _DaySchedulePageState();
@@ -16,7 +19,6 @@ class DaySchedulePage extends StatefulWidget {
 
 class _DaySchedulePageState extends State<DaySchedulePage> {
   late List<String> lessons;
-  final TextEditingController _controller = TextEditingController();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final Logger _logger = Logger(printer: PrettyPrinter());
 
@@ -32,19 +34,32 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
   }
 
   Future<void> _addLesson() async {
-    if (lessons.length >= 10) return;
-    final l10n = AppLocalizations.of(context);
-    final newName = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
+  if (lessons.length >= 10) return;
+  
+  final l10n = AppLocalizations.of(context);
+  // Переменная для хранения выбранного в диалоге предмета
+  String? selectedSubject = ConstantSubjects.availableSubjects.first; 
+
+  final newName = await showDialog<String>(
+    context: context,
+    builder: (context) => StatefulBuilder( // Используем для обновления состояния внутри диалога
+      builder: (context, setDialogState) => AlertDialog(
         title: Text(l10n.addLessonButton),
-        content: TextField(
-          controller: _controller,
-          decoration: InputDecoration(
-            labelText: l10n.addLessonButton,
-            border: const OutlineInputBorder(),
-            prefixIcon: const Icon(Icons.book, color: Colors.blue),
+        content: DropdownButtonFormField<String>(
+          initialValue: selectedSubject,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.book, color: Colors.blue),
           ),
+          items: ConstantSubjects.availableSubjects.map((String subject) {
+            return DropdownMenuItem<String>(
+              value: subject,
+              child: Text(subject),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setDialogState(() => selectedSubject = value);
+          },
         ),
         actions: [
           TextButton(
@@ -52,35 +67,25 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
             child: Text(l10n.cancelButton),
           ),
           TextButton(
-            onPressed: () {
-              if (_controller.text.isNotEmpty) {
-                Navigator.pop(context, _controller.text);
-              }
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.add, color: Colors.green, size: 20),
-                const SizedBox(width: 4),
-                Text(l10n.addButton),
-              ],
-            ),
+            onPressed: () => Navigator.pop(context, selectedSubject),
+            child: Text(l10n.addButton),
           ),
         ],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
-    );
-    if (newName != null && context.mounted) {
-      setState(() {
+    ),
+  );
 
-        lessons.add(newName);
-        _listKey.currentState?.insertItem(
-          lessons.length - 1,
-          duration: const Duration(milliseconds: 500),
-        );
-      });
-    }
+  if (newName != null && context.mounted) {
+    setState(() {
+      lessons.add(newName);
+      _listKey.currentState?.insertItem(
+        lessons.length - 1,
+        duration: const Duration(milliseconds: 500),
+      );
+    });
   }
+}
 
   Future<void> _editOrRemoveLesson(int index) async {
     if (index >= lessons.length) return;
@@ -124,18 +129,30 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
     if (result != null && context.mounted) {
       setState(() {
         if (result['action'] == 'edit') {
-          _controller.text = lessons[index];
+          String? editedSubject = lessons[index];
           showDialog<String>(
             context: context,
-            builder: (context) => AlertDialog(
+            builder: (context) => StatefulBuilder(
+              builder: (context, setDialogState) => AlertDialog(
               title: Text(l10n.editLessonTitle),
-              content: TextField(
-                controller: _controller,
+              content: DropdownButtonFormField<String>(
+                initialValue: ConstantSubjects.availableSubjects.contains(editedSubject) 
+                ? editedSubject 
+                : ConstantSubjects.availableSubjects.first,
                 decoration: InputDecoration(
                   labelText: l10n.addLessonButton,
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.book, color: Colors.blue),
                 ),
+                items: ConstantSubjects.availableSubjects.map((String subject) {
+                  return DropdownMenuItem<String>(
+                    value: subject,
+                    child: Text(subject),
+                  );
+                }).toList(),
+                onChanged: (value){
+                  setDialogState(() => editedSubject = value);
+                }
               ),
               actions: [
                 TextButton(
@@ -144,9 +161,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    if (_controller.text.isNotEmpty) {
-                      Navigator.pop(context, _controller.text);
-                    }
+                      Navigator.pop(context, editedSubject);
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -160,13 +175,15 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
               ],
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             ),
-          ).then((newName) {
-            if (newName != null && context.mounted) {
+          ),
+          ).then((newName){
+            if(newName != null && context.mounted){
               setState(() {
                 lessons[index] = newName;
               });
             }
-          });
+          }
+          );
         } else if (result['action'] == 'remove') {
           final removed = lessons.removeAt(index);
           _listKey.currentState?.removeItem(
@@ -199,8 +216,9 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
             duration: const Duration(milliseconds: 600),
           );
         }
-      });
-    }
+      },
+      );
+      }
   }
 
   Future<void> _saveLessons() async {
@@ -231,12 +249,6 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
   void _onSavedButtonPressed(){
     _saveLessons();
     _showToast();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
