@@ -8,7 +8,7 @@ import 'package:logger/logger.dart';
 import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 
-// Page : Calendar Page
+
 class CalendarPage extends StatefulWidget {
   final Function(Locale) changeLanguage;
   final ScheduleRepository scheduleRepository;
@@ -25,7 +25,7 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   DateTime currentMonth = DateTime.now();
   late List<String> students;
-  final  _logger = Logger(); // Инициализация logger
+  final  _logger = Logger(); 
   bool hasSchedule = false;
   Set<DateTime> scheduleChangeDays = {};
 

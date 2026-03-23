@@ -86,9 +86,9 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
     if (index >= lessons.length) return;
     final l10n = AppLocalizations.of(context);
     final result = await showDialog<Map<String, dynamic>>(
-      context: context, // Исправлено: удалена опечатка "inished"
+      context: context, 
       builder: (context) => AlertDialog(
-        title: Text(l10n.editLessonTitle), // Используем editLessonTitle или fallback
+        title: Text(l10n.editLessonTitle), 
         content: Text('${l10n.lessonsFor} "${lessons[index]}"'),
         actions: [
           TextButton(
@@ -208,7 +208,6 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('schedule_${widget.day}', jsonEncode(lessons));
       if (context.mounted) {
-        // ignore: use_build_context_synchronously
         Navigator.pop(context, lessons);
       }
     } catch (e) {

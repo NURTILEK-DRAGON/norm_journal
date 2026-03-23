@@ -97,8 +97,6 @@ Widget build(BuildContext context) {
             value: filledCount / days.length,
           ),
           const SizedBox(height: 16),
-
-          // 👇 ВАЖНО: GridView теперь в Expanded
           Expanded(
             child: GridView.count(
               crossAxisCount: 2,
@@ -121,10 +119,9 @@ Widget build(BuildContext context) {
                       ),
                     );
                    if (result is List<String>) {
-  setState(() {
-    schedules[day] = result;
-  });
-}
+                    setState(() {
+                    schedules[day] = result;});
+                    }
                   },
                   child: Container(
                     padding: const EdgeInsets.all(16),

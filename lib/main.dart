@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, empty_catches, deprecated_member_use
 import 'package:norm_journal/pages/calendar_page.dart';
 import 'package:flutter/material.dart';
 import 'package:norm_journal/l10n/app_localizations.dart';

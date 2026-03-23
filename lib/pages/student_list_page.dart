@@ -17,8 +17,8 @@ class _StudentListPageState extends State<StudentListPage> {
   List<String> students = [];
   final TextEditingController _studentController = TextEditingController();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  final Logger _logger = Logger(); // Инициализация logger
-
+  final Logger _logger = Logger(); 
+  
   @override
   void initState() {
     super.initState();
