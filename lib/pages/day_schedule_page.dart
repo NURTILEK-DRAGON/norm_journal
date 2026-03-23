@@ -24,7 +24,6 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
   void initState() {
     super.initState();
     lessons = List.from(widget.currentLessons);
-    // Анимация для начальной загрузки уроков
     WidgetsBinding.instance.addPostFrameCallback((_) {
       for (int i = 0; i < lessons.length; i++) {
         _listKey.currentState?.insertItem(i, duration: const Duration(milliseconds: 500));
@@ -32,18 +31,9 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
     });
   }
 
-  String _getOrdinal(int number) {
-    if (number % 10 == 1 && number % 100 != 11) return 'st';
-    if (number % 10 == 2 && number % 100 != 12) return 'nd';
-    if (number % 10 == 3 && number % 100 != 13) return 'rd';
-    return 'th';
-  }
-
   Future<void> _addLesson() async {
     if (lessons.length >= 10) return;
     final l10n = AppLocalizations.of(context);
-    final defaultName = '${lessons.length + 1}${_getOrdinal(lessons.length + 1)} Lesson';
-    _controller.text = defaultName;
     final newName = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
