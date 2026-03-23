@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "606042972888",
+    "project_id": "norm-journal",
+    "storage_bucket": "norm-journal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606042972888:android:d6dc43f546355cae192dad",
+        "android_client_info": {
+          "package_name": "com.example.norm_journal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaLvqVKmhbuTCAnU7M44irtQiGrYjQZOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
