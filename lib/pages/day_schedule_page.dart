@@ -208,6 +208,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('schedule_${widget.day}', jsonEncode(lessons));
       if (context.mounted) {
+        // ignore: use_build_context_synchronously
         Navigator.pop(context, lessons);
       }
     } catch (e) {
