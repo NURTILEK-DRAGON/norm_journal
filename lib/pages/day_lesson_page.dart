@@ -8,12 +8,16 @@ class DayLessonsPage extends StatefulWidget {
   final DateTime selectedDate;
   final List<String> students;
   final ScheduleRepository scheduleRepository;
+  final bool isTeacher;
+  final List<String> teacherSubjects;
 
   const DayLessonsPage({
     super.key,
     required this.scheduleRepository,
     required this.selectedDate,
-    required this.students,
+    required this.students, 
+    this.isTeacher = false,
+    this.teacherSubjects = const [],
   });
 
   @override
@@ -33,11 +37,18 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
   Future<void> _loadLessons() async {
     final weekSchedule =
         await widget.scheduleRepository.getScheduleForDate(widget.selectedDate);
-
     final weekdayKey = _getWeekdayString(widget.selectedDate.weekday);
+    List<String> allLessons = weekSchedule[weekdayKey] ?? [];
 
     setState(() {
-      lessonNames = weekSchedule[weekdayKey] ?? [];
+      if(widget.isTeacher) {
+        lessonNames = allLessons
+        .where((lesson) => widget.teacherSubjects.contains(lesson))
+        .toList();
+      }
+      else{
+        lessonNames = allLessons;
+      }
       isLoading = false;
     });
   }
@@ -112,7 +123,9 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
             : lessonNames.isEmpty
                 ? Center(
                     child: Text(
-                      l10n.noLessonsToday,
+                      widget.isTeacher 
+                      ? 'today you don\'t have lessons'
+                      : l10n.noLessonsToday,
                       style: const TextStyle(fontSize: 18),
                     ),
                   )
@@ -145,6 +158,7 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
                                   lesson: 'lesson${index + 1}',
                                   displayLesson: lesson,
                                   students: widget.students,
+                                  isteacher: widget.isTeacher,
                                 ),
                               ),
                             );
