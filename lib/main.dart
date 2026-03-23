@@ -1,6 +1,8 @@
+import 'package:norm_journal/data/utils/user_preferences.dart';
 import 'package:norm_journal/pages/calendar_page.dart';
 import 'package:flutter/material.dart';
 import 'package:norm_journal/l10n/app_localizations.dart';
+import 'package:norm_journal/pages/role_selection_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
@@ -8,17 +10,24 @@ import 'package:norm_journal/data/data_source/local_schedule_data_source.dart';
 
 void main() async {
   
-  final scheduleRepository = ScheduleRepository(
-    LocalScheduleDataSource(),);
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(AttendanceApp(scheduleRepository: scheduleRepository,));
+
+  final scheduleRepository = ScheduleRepository(LocalScheduleDataSource(),);
+  final bool registered = await UserPreferences.isRegistered();
+  
+  runApp(AttendanceApp(
+    scheduleRepository: scheduleRepository,
+    isRegistered: registered,));
 }
 class AttendanceApp extends StatefulWidget {
   
   final ScheduleRepository scheduleRepository;
+  final bool isRegistered;
   const AttendanceApp({
     super.key, 
-    required this.scheduleRepository});
+    required this.scheduleRepository, 
+    required this.isRegistered});
+    
   @override
   State<AttendanceApp> createState() => _AttendanceAppState();
 }
@@ -68,10 +77,12 @@ class _AttendanceAppState extends State<AttendanceApp> {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        home: CalendarPage(
+        home: widget.isRegistered 
+         ? CalendarPage(
           changeLanguage: _changeLanguage,
           scheduleRepository: widget.scheduleRepository
-          ),
+          )
+          : const RoleSelectionPage()
       );
   }
 }
