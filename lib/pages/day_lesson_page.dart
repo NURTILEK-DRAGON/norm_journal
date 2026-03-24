@@ -160,7 +160,8 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
                                   lesson: 'lesson${index + 1}',
                                   displayLesson: lesson,
                                   students: widget.students,
-                                  isteacher: widget.isTeacher,
+                                  isteacher: widget.isTeacher, 
+                                  groupId: '',
                                 ),
                               ),
                             );
