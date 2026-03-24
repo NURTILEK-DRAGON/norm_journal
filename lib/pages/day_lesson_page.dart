@@ -27,6 +27,8 @@ class DayLessonsPage extends StatefulWidget {
 
 class _DayLessonsPageState extends State<DayLessonsPage> {
   List<String> lessonNames = [];
+  List<String> allDayLessons = []; 
+  String? currentGroupId;
   bool isLoading = true;
 
   @override
@@ -43,6 +45,8 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
     List<String> allLessons = weekSchedule[weekdayKey] ?? [];
 
     setState(() {
+      allDayLessons = allLessons;
+      currentGroupId = groupId;
       if(widget.isTeacher) {
         lessonNames = allLessons
         .where((lesson) => widget.teacherSubjects.contains(lesson))
@@ -134,7 +138,8 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
                 : ListView.builder(
                     itemCount: lessonNames.length,
                     itemBuilder: (context, index) {
-                      final lesson = lessonNames[index];
+                      final lessonName = lessonNames[index];
+                      final realLessonIndex = allDayLessons.indexOf(lessonName);
                       return Card(
                         elevation: 4,
                         margin: const EdgeInsets.symmetric(
@@ -143,7 +148,7 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
                             borderRadius: BorderRadius.circular(10)),
                         child: ListTile(
                           title: Text(
-                            lesson,
+                            lessonName,
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -157,11 +162,13 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
                                   date: widget.selectedDate.day,
                                   month: widget.selectedDate.month,
                                   year: widget.selectedDate.year,
-                                  lesson: 'lesson${index + 1}',
-                                  displayLesson: lesson,
+                                  lesson: 'lesson${realLessonIndex + 1}',
+                                  displayLesson: lessonName,
                                   students: widget.students,
                                   isteacher: widget.isTeacher, 
-                                  groupId: '',
+                                  groupId: currentGroupId ?? 'unknown',
+                                  isGroupLesson: false, 
+                                  groupData: null,
                                 ),
                               ),
                             );
