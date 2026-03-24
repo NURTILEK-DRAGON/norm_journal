@@ -19,10 +19,26 @@ class RoleSelectionPage extends StatefulWidget {
 class _RoleSelectionPageState extends State<RoleSelectionPage> {
   bool isTeacherSelected = false;
   List<String> selectedSubjects = [];
- 
+  final TextEditingController _groupController = TextEditingController();
   final List<String> allSubjects = ConstantSubjects.availableSubjects;
 
+
+  @override
+  void dispose() {
+    _groupController.dispose(); 
+    super.dispose();
+  }
+
   Future<void> _saveAndContinue() async {
+
+    final String groupId = _groupController.text.trim();
+
+    if(groupId.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Пожалуйста, введите название вашей группы')),
+      );
+      return;
+    }
 
     if (isTeacherSelected && selectedSubjects.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -30,7 +46,7 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
       );
       return;
     }
-    await UserPreferences.saveUser(isTeacherSelected, subjects: selectedSubjects);
+    await UserPreferences.saveUser(isTeacherSelected, groupId, subjects: selectedSubjects);
 
     if (mounted) {
       Navigator.pushReplacement(
@@ -55,7 +71,18 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+          children: [ 
+            Expanded(child: 
+            TextField(
+              controller: _groupController,
+              decoration: const InputDecoration(
+                labelText: 'Введите название вашей группы',
+                hintText: 'Например: РМП-24',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.group),
+              ),
+            ),
+            ),
             const Text(
               'Выберите вашу роль:',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -66,11 +93,14 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
             // Кнопка Старосты
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: !isTeacherSelected ? Colors.green : Colors.grey[300],
+                backgroundColor: !isTeacherSelected 
+                ? Colors.green 
+                : Colors.grey[300],
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               onPressed: () => setState(() => isTeacherSelected = false),
-              child: const Text('Я Староста', style: TextStyle(fontSize: 18, color: Colors.white)),
+              child: const Text('Я Староста', 
+              style: TextStyle(fontSize: 18, color: Colors.white)),
             ),
             const SizedBox(height: 10),
 
@@ -81,14 +111,17 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               onPressed: () => setState(() => isTeacherSelected = true),
-              child: const Text('Я Преподаватель', style: TextStyle(fontSize: 18, color: Colors.white)),
+              child: const Text('Я Преподаватель', 
+              style: TextStyle(fontSize: 18, color: Colors.white)),
             ),
+            
             
             const SizedBox(height: 20),
 
             // Список предметов (показываем только если выбран учитель)
             if (isTeacherSelected) ...[
-              const Text('Какие предметы вы ведете?', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Какие предметы вы ведете?', 
+              style: TextStyle(fontWeight: FontWeight.bold)),
               Expanded(
                 child: ListView.builder(
                   itemCount: allSubjects.length,
@@ -125,6 +158,6 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
           ],
         ),
       ),
-    );
+      );
   }
 }
