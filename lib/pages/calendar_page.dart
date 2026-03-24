@@ -14,7 +14,7 @@ class CalendarPage extends StatefulWidget {
   final ScheduleRepository scheduleRepository;
   final bool isTeacher;
   final List<String> teacherSubjects; 
-  final String? monitorId;
+  final String? groupId;
 
   const CalendarPage({
     super.key, 
@@ -22,7 +22,7 @@ class CalendarPage extends StatefulWidget {
     required this.scheduleRepository,
     this.isTeacher = false,
     this.teacherSubjects = const [],
-    this.monitorId,});
+    this.groupId,});
   
   @override
   State<CalendarPage> createState() => _CalendarPageState();
@@ -271,9 +271,10 @@ Future<void> _checkHasSchedule() async {
                             builder: (context) => DayLessonsPage(
                               scheduleRepository: widget.scheduleRepository,
                               selectedDate: date,
-                              students: students,
+                              students: [],
                               isTeacher: widget.isTeacher,
                               teacherSubjects: widget.teacherSubjects,
+                              groupId: widget.groupId,
                             ),
                           ),
                         );

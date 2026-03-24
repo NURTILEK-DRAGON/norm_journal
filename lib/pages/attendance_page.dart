@@ -160,6 +160,7 @@ class _AttendancePageState extends State<AttendancePage> {
           .set({
         'lastUpdate': FieldValue.serverTimestamp(),
         'records': attendance,
+        'studentsList' : widget.students
       }, SetOptions(merge: true));
     } catch (e) {
       debugPrint('Error saving: $e');
@@ -205,8 +206,18 @@ class _AttendancePageState extends State<AttendancePage> {
           // Если данные пришли из Firebase, синхронизируем их
           if (snapshot.hasData && snapshot.data!.exists) {
             final data = snapshot.data!.data() as Map<String, dynamic>;
-            final List<dynamic> remoteRecords = data['records'];
-            attendance = remoteRecords.map((x) => Map<String, dynamic>.from(x)).toList();
+           
+           if(widget.isteacher&&(attendance.isEmpty)){
+            final List<dynamic>? remoteStudents = data['studentList']; 
+            final List<dynamic>? remoteRecords = data['records'];
+            if(remoteStudents != null && remoteRecords != null){
+              Future.microtask(() {
+                setState(() {
+                  attendance = remoteRecords.map((x) => Map<String, dynamic>.from(x)).toList();
+                });
+              });
+            }
+           }
           }
 
           if (attendance.isEmpty && snapshot.connectionState == ConnectionState.waiting) {

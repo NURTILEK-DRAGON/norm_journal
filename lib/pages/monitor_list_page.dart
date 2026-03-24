@@ -126,7 +126,7 @@ class _MonitorsListPageState extends State<MonitorsListPage> {
                                   scheduleRepository: widget.scheduleRepository,
                                   isTeacher: true,
                                   teacherSubjects: widget.teacherSubjects,
-                                  monitorId: monitor.name,
+                                  groupId: monitor.group,
                                   )
                                   )
                                   );

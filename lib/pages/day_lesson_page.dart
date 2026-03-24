@@ -11,6 +11,7 @@ class DayLessonsPage extends StatefulWidget {
   final ScheduleRepository scheduleRepository;
   final bool isTeacher;
   final List<String> teacherSubjects;
+  final String? groupId;
 
   const DayLessonsPage({
     super.key,
@@ -19,6 +20,7 @@ class DayLessonsPage extends StatefulWidget {
     required this.students, 
     this.isTeacher = false,
     this.teacherSubjects = const [],
+    this.groupId
   });
 
   @override
@@ -38,7 +40,7 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
   }
 
   Future<void> _loadLessons() async {
-    final groupId = await UserPreferences.getGroupId();
+    final groupId = widget.groupId ?? await UserPreferences.getGroupId();
     final weekSchedule = await widget.scheduleRepository
     .getScheduleForDate(widget.selectedDate, groupId);
     final weekdayKey = _getWeekdayString(widget.selectedDate.weekday);
@@ -130,7 +132,7 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
                 ? Center(
                     child: Text(
                       widget.isTeacher 
-                      ? 'today you don\'t have lessons'
+                      ? "today you don't have lessons"
                       : l10n.noLessonsToday,
                       style: const TextStyle(fontSize: 18),
                     ),
