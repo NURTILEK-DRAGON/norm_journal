@@ -1,3 +1,4 @@
+import 'package:norm_journal/data/data_source/remote_schedule_data_source.dart';
 import 'package:norm_journal/data/utils/user_preferences.dart';
 import 'package:norm_journal/pages/calendar_page.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final scheduleRepository = ScheduleRepository(LocalScheduleDataSource(),);
+  final localDS = LocalScheduleDataSource();
+  final remoteDS = RemoteScheduleDataSource();
+  final scheduleRepository = ScheduleRepository(localDS, remoteDS);
   final bool registered = await UserPreferences.isRegistered();
   
   runApp(AttendanceApp(
@@ -29,6 +32,7 @@ class AttendanceApp extends StatefulWidget {
   
   final ScheduleRepository scheduleRepository;
   final bool isRegistered;
+
   const AttendanceApp({
     super.key, 
     required this.scheduleRepository, 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:norm_journal/pages/attendance_page.dart';
 import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
+import 'package:norm_journal/data/utils/user_preferences.dart';
 
 // Page : Day Lessons Page
 class DayLessonsPage extends StatefulWidget {
@@ -35,8 +36,9 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
   }
 
   Future<void> _loadLessons() async {
-    final weekSchedule =
-        await widget.scheduleRepository.getScheduleForDate(widget.selectedDate);
+    final groupId = await UserPreferences.getGroupId();
+    final weekSchedule = await widget.scheduleRepository
+    .getScheduleForDate(widget.selectedDate, groupId);
     final weekdayKey = _getWeekdayString(widget.selectedDate.weekday);
     List<String> allLessons = weekSchedule[weekdayKey] ?? [];
 

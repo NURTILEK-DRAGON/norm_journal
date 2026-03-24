@@ -3,13 +3,13 @@ import 'package:logger/web.dart';
 import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:norm_journal/pages/day_schedule_page.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
+import 'package:norm_journal/data/utils/user_preferences.dart';
 // Page : Schedule Page
 class SchedulePage extends StatefulWidget {
+
   final ScheduleRepository scheduleRepository;
-  const SchedulePage({
-    super.key,
-    required this.scheduleRepository 
-    });
+
+  const SchedulePage({super.key,required this.scheduleRepository});
 
   @override
   State<SchedulePage> createState() => _SchedulePageState();
@@ -30,7 +30,10 @@ _loadFromRepository();
 }
 
  Future<void> _loadFromRepository() async {
-  final week = await widget.scheduleRepository.getScheduleForDate(DateTime.now());
+
+  final groupId = await UserPreferences.getGroupId();
+  final week = await widget.scheduleRepository
+  .getScheduleForDate(DateTime.now(), groupId);
 
   setState(() {
     for (var day in days) {
@@ -39,13 +42,12 @@ _loadFromRepository();
   });
 }
 
-
-
   bool get allFilled => days.every((day) => schedules[day]!.isNotEmpty);
 
   Future<void> _saveAndProceed() async {
   try {
-    await widget.scheduleRepository.saveNewSchedule(schedules);
+    final groupId = await UserPreferences.getGroupId();
+    await widget.scheduleRepository.saveNewSchedule(groupId,schedules);
 
     if (mounted) {
       Navigator.pop(context);

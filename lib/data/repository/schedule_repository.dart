@@ -1,49 +1,41 @@
+import 'package:norm_journal/data/data_source/local_schedule_data_source.dart';
+import 'package:norm_journal/data/data_source/remote_schedule_data_source.dart';
 import '../data_source/schedule_data_source.dart';
 
 class ScheduleRepository {
-  final ScheduleDataSource dataSource;
+  final LocalScheduleDataSource localDataSource;
+  final RemoteScheduleDataSource remoteDataSource;
 
-  ScheduleRepository(this.dataSource);
+  ScheduleRepository(
+    this.localDataSource,
+    this.remoteDataSource,);
 
-  Future<bool> hasAnySchedule() async {
-    final versions = await dataSource.loadVersions();
-    return versions.isNotEmpty;
-  }
+  Future<void> saveNewSchedule(String groupId, Map<String, List<String>> schedule) async {
 
-  Future<void> saveNewSchedule(Map<String, List<String>> schedule) async {
-    final versions = await dataSource.loadVersions();
+    final versions = await remoteDataSource.loadVersionsForGroup(groupId);
 
-    final now = DateTime.now();
-    final fromDate = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-      now.second,
-      now.millisecond,
-    );
+    final fromDate = DateTime.now(); 
 
     versions.removeWhere((v) => v.from.isAtSameMomentAs(fromDate));
-
-    versions.add(
-      ScheduleVersion(
-        from: fromDate,
-        schedule: schedule,
-      ),
-    );
-
+    versions.add(ScheduleVersion(from: fromDate, schedule: schedule));
     versions.sort((a, b) => a.from.compareTo(b.from));
 
-    await dataSource.saveVersions(versions);
+    await remoteDataSource.saveVersionsForGroup(groupId, versions);
+    
+    await localDataSource.saveVersions(versions);
   }
 
-  Future<Map<String, List<String>>> getScheduleForDate(DateTime date) async {
-    final versions = await dataSource.loadVersions();
+  Future<Map<String, List<String>>> getScheduleForDate(DateTime date, String groupId) async {
+    List<ScheduleVersion> versions = await remoteDataSource.loadVersionsForGroup(groupId);
+    if (versions.isEmpty) {
+      versions = await localDataSource.loadVersions();
+    } else {
+      await localDataSource.saveVersions(versions);
+    }
+
     if (versions.isEmpty) return {};
 
     final target = DateTime(date.year, date.month, date.day);
-
     ScheduleVersion? best;
 
     for (final v in versions) {
@@ -53,16 +45,21 @@ class ScheduleRepository {
         }
       }
     }
-
-    if (best == null) {
-      return versions.first.schedule;
-    }
-
-    return best.schedule;
+    return best?.schedule ?? versions.first.schedule;
   }
 
-  Future<List<DateTime>> getChangeDates() async {
-    final versions = await dataSource.loadVersions();
-    return versions.map((e) => e.from).toList();
-  }
+  Future<bool> hasAnySchedule() async {
+  // Проверяем локалку или удаленку (для быстроты проверим локалку)
+  final versions = await localDataSource.loadVersions();
+  return versions.isNotEmpty;
 }
+
+Future<List<DateTime>> getChangeDates() async {
+  // Получаем даты всех изменений расписания
+  final versions = await localDataSource.loadVersions();
+  return versions.map((e) => e.from).toList();
+}
+}
+
+
+
