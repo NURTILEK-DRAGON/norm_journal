@@ -18,13 +18,12 @@ class MonitorsListPage extends StatefulWidget {
 
   final Function(Locale) changeLanguage;
   final ScheduleRepository scheduleRepository;
-  final List<String> teacherSubjects;
+
   
   const MonitorsListPage({
     super.key,
     required this.changeLanguage,
-    required this.scheduleRepository,
-    required this.teacherSubjects,});
+    required this.scheduleRepository,});
 
   @override
   State<MonitorsListPage> createState() => _MonitorsListPageState();
