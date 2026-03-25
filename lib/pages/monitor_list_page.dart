@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'package:norm_journal/pages/calendar_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Временная модель данных для старосты
 class Monitor {
@@ -118,18 +119,17 @@ class _MonitorsListPageState extends State<MonitorsListPage> {
                             style: TextStyle(color: Colors.grey.shade600),
                           ),
                           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: 
-                                (context) =>  CalendarPage(
-                                  changeLanguage: widget.changeLanguage, 
-                                  scheduleRepository: widget.scheduleRepository,
-                                  isTeacher: true,
-                                  teacherSubjects: widget.teacherSubjects,
-                                  groupId: monitor.group,
-                                  )
-                                  )
-                                  );
+                          onTap: () async{
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setString('group_id', monitor.group);
+                           if(context.mounted){
+                            Navigator.push(
+                              context, MaterialPageRoute(builder:
+                              (context) => CalendarPage(
+                                changeLanguage: widget.changeLanguage,
+                                scheduleRepository: widget.scheduleRepository
+                              ) ));
+                           }
                           },
                         ),
                       );

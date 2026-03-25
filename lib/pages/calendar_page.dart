@@ -17,17 +17,13 @@ import 'package:norm_journal/data/utils/user_preferences.dart';
 class CalendarPage extends StatefulWidget {
   final Function(Locale) changeLanguage;
   final ScheduleRepository scheduleRepository;
-  final bool isTeacher;
-  final List<String> teacherSubjects; 
-  final String? groupId;
+  
 
   const CalendarPage({
     super.key, 
     required this.changeLanguage, 
     required this.scheduleRepository,
-    this.isTeacher = false,
-    this.teacherSubjects = const [],
-    this.groupId,});
+    });
   
   @override
   State<CalendarPage> createState() => _CalendarPageState();
@@ -39,7 +35,10 @@ class _CalendarPageState extends State<CalendarPage> {
   final  _logger = Logger(); 
   bool hasSchedule = false;
   Set<DateTime> scheduleChangeDays = {};
-
+  bool _isTeacher = false;
+  List<String> _teacherSubjects = [];
+  String? _groupId;
+  bool _isLoading = true;
 
 
   @override
@@ -48,6 +47,35 @@ class _CalendarPageState extends State<CalendarPage> {
     _loadStudents();
     _checkHasSchedule();
     _loadScheduleChangeDays();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final isTeacher = await UserPreferences.isTeacher();
+    final subjects = await UserPreferences.getTeacherSubjects();
+    final group = await UserPreferences.getGroupId();
+    final studentList = await _getStudentsFromPrefs();
+
+    setState(() {
+      _isTeacher = isTeacher;
+      _teacherSubjects = subjects;
+      _groupId = group;
+      students = studentList;
+      _isLoading = false; 
+    });
+  }
+
+  Future<List<String>> _getStudentsFromPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String? studentsRaw = prefs.getString('students');
+      if (studentsRaw != null) {
+        return List<String>.from(jsonDecode(studentsRaw));
+      }
+    } catch (e) {
+      _logger.e('Error loading students: $e');
+    }
+    return [];
   }
 
 Future<void> _loadScheduleChangeDays() async {
@@ -143,6 +171,10 @@ Future<void> _checkHasSchedule() async {
       l10n.weekday0,
     ];
 
+    if (_isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${_getMonthName(currentMonth.month)} ${currentMonth.year}'),
@@ -165,10 +197,12 @@ Future<void> _checkHasSchedule() async {
               ),
             ],
           ),
+
           IconButton(
             icon: const Icon(Icons.arrow_left),
             onPressed: _previousMonth,
           ),
+
           IconButton(
             icon: const Icon(Icons.arrow_right),
             onPressed: _nextMonth,
@@ -188,7 +222,7 @@ Future<void> _checkHasSchedule() async {
             (route) => false,
           );
         }
-            }, 
+      }, 
             icon: Icon(Icons.logout,
             color: Colors.black,))
         ],
@@ -207,7 +241,7 @@ Future<void> _checkHasSchedule() async {
         ),
         child: Column(
           children: [
-            if(!widget.isTeacher)
+            if(!_isTeacher)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -218,7 +252,7 @@ Future<void> _checkHasSchedule() async {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const StudentListPage()),
-                      ).then((_) => _loadStudents());
+                      ).then((_) => _loadUserData());
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
@@ -295,9 +329,9 @@ Future<void> _checkHasSchedule() async {
                               scheduleRepository: widget.scheduleRepository,
                               selectedDate: date,
                               students: [],
-                              isTeacher: widget.isTeacher,
-                              teacherSubjects: widget.teacherSubjects,
-                              groupId: widget.groupId,
+                              isTeacher: _isTeacher,
+                              teacherSubjects: _teacherSubjects,
+                              groupId: _groupId,
                             ),
                           ),
                         );

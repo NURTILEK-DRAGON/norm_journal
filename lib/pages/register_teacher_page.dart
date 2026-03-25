@@ -20,7 +20,8 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedSubjects.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Выберите хотя бы один предмет')));
+      ScaffoldMessenger.of(context)
+      .showSnackBar(const SnackBar(content: Text('Выберите хотя бы один предмет')));
       return;
     }
 
