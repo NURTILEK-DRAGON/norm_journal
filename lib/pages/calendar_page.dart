@@ -1,12 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+
 import 'package:norm_journal/pages/day_lesson_page.dart';
+import 'package:norm_journal/pages/role_selection_page.dart';
 import 'package:norm_journal/pages/schedule_page.dart';
 import 'package:norm_journal/pages/student_list_page.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logger/logger.dart';
+
 import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
+import 'package:norm_journal/data/utils/user_preferences.dart';
 
 
 class CalendarPage extends StatefulWidget {
@@ -168,6 +173,24 @@ Future<void> _checkHasSchedule() async {
             icon: const Icon(Icons.arrow_right),
             onPressed: _nextMonth,
           ),
+
+          IconButton(
+            onPressed: ()async{
+              await UserPreferences.clearUser();
+              if (context.mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (_) => RoleSelectionPage(
+                scheduleRepository: widget.scheduleRepository,
+              ),
+            ),
+            (route) => false,
+          );
+        }
+            }, 
+            icon: Icon(Icons.logout,
+            color: Colors.black,))
         ],
         backgroundColor: Colors.blueAccent,
         elevation: 10,
