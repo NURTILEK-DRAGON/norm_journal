@@ -1,164 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
-import 'package:norm_journal/data/utils/user_preferences.dart';
-import 'package:norm_journal/constant_subjects.dart';
-import 'package:norm_journal/pages/calendar_page.dart'; 
+import 'register_monitor_page.dart';
+import 'register_teacher_page.dart';
 
-class RoleSelectionPage extends StatefulWidget {
-
+class RoleSelectionPage extends StatelessWidget {
   final ScheduleRepository? scheduleRepository;
 
-  const RoleSelectionPage({
-    super.key,
-    this.scheduleRepository});
-
-  @override
-  State<RoleSelectionPage> createState() => _RoleSelectionPageState();
-}
-
-class _RoleSelectionPageState extends State<RoleSelectionPage> {
-
-  bool isTeacherSelected = false;
-  List<String> selectedSubjects = [];
-  final TextEditingController _groupController = TextEditingController();
-  final List<String> allSubjects = ConstantSubjects.availableSubjects;
-
-  @override
-  void dispose() {
-    _groupController.dispose(); 
-    super.dispose();
-  }
-
-  Future<void> _saveAndContinue() async {
-
-    final String groupId = _groupController.text.trim();
-
-    if(groupId.isEmpty){
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Пожалуйста, введите название вашей группы')),
-      );
-      return;
-    }
-
-    if (isTeacherSelected && selectedSubjects.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Пожалуйста, выберите хотя бы один предмет')),
-      );
-      return;
-    }
-    
-    await UserPreferences.saveUser(isTeacherSelected, groupId, subjects: selectedSubjects);
-
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => CalendarPage(
-          scheduleRepository: widget.scheduleRepository!,
-          changeLanguage: (Locale locale) {},
-         )
-         ),
-      );
-    }
-  }
+  const RoleSelectionPage({super.key, this.scheduleRepository});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Добро пожаловать'),
-        backgroundColor: Colors.blueAccent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [ 
-            Expanded(child: 
-            TextField(
-              controller: _groupController,
-              decoration: const InputDecoration(
-                labelText: 'Введите название вашей группы',
-                hintText: 'Например: РМП-24',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.group),
+      backgroundColor: Colors.cyan[50],
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.school, size: 100, color: Colors.blueAccent),
+              const SizedBox(height: 24),
+              const Text(
+                'Кто вы?',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
-            ),
-            ),
-            const Text(
-              'Выберите вашу роль:',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            
-            // Кнопка Старосты
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: !isTeacherSelected 
-                ? Colors.green 
-                : Colors.grey[300],
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-              onPressed: () => setState(() => isTeacherSelected = false),
-              child: const Text('Я Староста', 
-              style: TextStyle(fontSize: 18, color: Colors.white)),
-            ),
-            const SizedBox(height: 10),
+              const SizedBox(height: 8),
+              const Text('Выберите вашу роль для настройки профиля'),
+              const SizedBox(height: 40),
 
-            // Кнопка Учителя
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isTeacherSelected ? Colors.blue : Colors.grey[300],
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-              onPressed: () => setState(() => isTeacherSelected = true),
-              child: const Text('Я Преподаватель', 
-              style: TextStyle(fontSize: 18, color: Colors.white)),
-            ),
-            
-            
-            const SizedBox(height: 20),
-
-            // Список предметов (показываем только если выбран учитель)
-            if (isTeacherSelected) ...[
-              const Text('Какие предметы вы ведете?', 
-              style: TextStyle(fontWeight: FontWeight.bold)),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: allSubjects.length,
-                  itemBuilder: (context, index) {
-                    final subject = allSubjects[index];
-                    return CheckboxListTile(
-                      title: Text(subject),
-                      value: selectedSubjects.contains(subject),
-                      onChanged: (bool? value) {
-                        setState(() {
-                          if (value == true) {
-                            selectedSubjects.add(subject);
-                          } else {
-                            selectedSubjects.remove(subject);
-                          }
-                        });
-                      },
-                    );
-                  },
+              // Кнопка Старосты
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 60),
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
+                icon: const Icon(Icons.person_add, color: Colors.white),
+                label: const Text('Я Староста', style: TextStyle(color: Colors.white, fontSize: 18)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => RegisterMonitorPage(scheduleRepository: scheduleRepository),
+                    ),
+                  );
+                },
               ),
-            ] else ...[
-              const Spacer(), // Заполняем пустоту, если староста
-            ],
 
-            ElevatedButton(
-              onPressed: _saveAndContinue,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orangeAccent,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+              const SizedBox(height: 16),
+
+              // Кнопка Учителя
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 60),
+                  backgroundColor: Colors.blueAccent,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                icon: const Icon(Icons.assignment_ind, color: Colors.white),
+                label: const Text('Я Преподаватель', style: TextStyle(color: Colors.white, fontSize: 18)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => RegisterTeacherPage(scheduleRepository: scheduleRepository),
+                    ),
+                  );
+                },
               ),
-              child: const Text('Продолжить', style: TextStyle(fontSize: 18)),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-      );
+    );
   }
 }
