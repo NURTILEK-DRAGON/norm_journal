@@ -17,11 +17,11 @@ class RoleSelectionPage extends StatefulWidget {
 }
 
 class _RoleSelectionPageState extends State<RoleSelectionPage> {
+
   bool isTeacherSelected = false;
   List<String> selectedSubjects = [];
   final TextEditingController _groupController = TextEditingController();
   final List<String> allSubjects = ConstantSubjects.availableSubjects;
-
 
   @override
   void dispose() {
@@ -46,6 +46,7 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
       );
       return;
     }
+    
     await UserPreferences.saveUser(isTeacherSelected, groupId, subjects: selectedSubjects);
 
     if (mounted) {

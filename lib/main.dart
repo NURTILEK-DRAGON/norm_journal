@@ -43,6 +43,7 @@ class AttendanceApp extends StatefulWidget {
 }
 
 class _AttendanceAppState extends State<AttendanceApp> {
+  
   Locale _locale = const Locale('en');
 
   @override
