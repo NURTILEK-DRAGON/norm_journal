@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:norm_journal/data/repository/firestore_service.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'package:norm_journal/data/utils/user_preferences.dart';
 import 'package:norm_journal/pages/calendar_page.dart';
@@ -15,10 +16,15 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _groupController = TextEditingController();
+  final FirestoreService _firestoreService = FirestoreService();
 
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
 
+    try{
+    await _firestoreService.saveMonitor(
+     name: _nameController.text.trim(), 
+     groupId: _groupController.text.trim());
     await UserPreferences.saveUser(false, _groupController.text.trim());
 
     if (mounted) {
@@ -33,6 +39,13 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
         (route) => false,
       );
     }
+  }catch(e){
+    if(mounted){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('failure regis-on: $e'),)
+      );
+    }
+  }
   }
 
   @override
@@ -64,7 +77,9 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green, 
+                    foregroundColor: Colors.white),
                   onPressed: _register,
                   child: const Text('Зарегистрироваться', style: TextStyle(fontSize: 16)),
                 ),

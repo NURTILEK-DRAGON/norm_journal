@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:norm_journal/constant_subjects.dart';
+import 'package:norm_journal/data/repository/firestore_service.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'package:norm_journal/data/utils/user_preferences.dart';
 import 'package:norm_journal/pages/calendar_page.dart';
@@ -16,16 +17,26 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final List<String> _selectedSubjects = [];
+  final FirestoreService _firestoreService = FirestoreService();
 
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
+
     if (_selectedSubjects.isEmpty) {
       ScaffoldMessenger.of(context)
       .showSnackBar(const SnackBar(content: Text('Выберите хотя бы один предмет')));
       return;
     }
 
-    await UserPreferences.saveUser(true, "Teacher", subjects: _selectedSubjects);
+    try{
+    await _firestoreService.saveTeacher(
+     name:  _nameController.text.trim(),
+     subjects: _selectedSubjects,);
+
+    await UserPreferences.saveUser(
+      true, 
+      "Teacher", 
+      subjects: _selectedSubjects);
 
     if (mounted) {
       Navigator.pushAndRemoveUntil(
@@ -33,12 +44,19 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
         MaterialPageRoute(
           builder: (_) => CalendarPage(
             scheduleRepository: widget.scheduleRepository!,
-            changeLanguage: (l) {},
+            changeLanguage: (L) {},
           ),
         ),
         (route) => false,
       );
     }
+  }catch(e){
+      if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка регистрации: $e')),
+      );
+    }
+  }
   }
 
   @override
