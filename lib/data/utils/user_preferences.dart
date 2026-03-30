@@ -44,8 +44,4 @@ class UserPreferences {
     return prefs.getString(_keyGroupId) ?? 'default_group'; // Если пусто, вернет заглушку
   }
 
-  static Future<void> clearUser() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.clear(); // Полностью очищает все сохраненные данные
-}
 }

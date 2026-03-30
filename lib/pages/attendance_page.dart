@@ -394,7 +394,7 @@ class _AttendancePageState extends State<AttendancePage> {
         var record = attendance[i];
         String status = "Был(а)";
         if (record['absent'] == true) {
-          status = "Н";
+          status = "Н (Неявка)";
         } else if (record['sick'] == true) status = "Б (Болезнь)";
         else if (record['documented'] == true) status = "П (Причина)";
         

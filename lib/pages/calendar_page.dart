@@ -66,6 +66,36 @@ class _CalendarPageState extends State<CalendarPage> {
     });
   }
 
+  void _showLogoutDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Выход'),
+      content: const Text('Вы уверены, что хотите выйти из аккаунта? Все настройки будут сброшены.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Отмена'),
+        ),
+        TextButton(
+          onPressed: () async {
+            await UserPreferences.logout(); // Твой метод из кода выше
+            if (context.mounted) {
+              // Возвращаемся на самый первый экран выбора роли
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => RoleSelectionPage(scheduleRepository: widget.scheduleRepository)),
+                (route) => false,
+              );
+            }
+          },
+          child: const Text('Выйти', style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    ),
+  );
+}
+
   Future<List<String>> _getStudentsFromPrefs() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -209,23 +239,11 @@ Future<void> _checkHasSchedule() async {
             onPressed: _nextMonth,
           ),
 
-          IconButton(
-            onPressed: ()async{
-              await UserPreferences.clearUser();
-              if (context.mounted) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (_) => RoleSelectionPage(
-                scheduleRepository: widget.scheduleRepository,
-              ),
+            IconButton(
+              onPressed: () => _showLogoutDialog(context), 
+              icon: Icon(Icons.logout,
+            color: Colors.black,)
             ),
-            (route) => false,
-          );
-        }
-      }, 
-            icon: Icon(Icons.logout,
-            color: Colors.black,))
         ],
         backgroundColor: Colors.blueAccent,
         elevation: 10,
