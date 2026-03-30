@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:norm_journal/pages/day_lesson_page.dart';
+import 'package:norm_journal/pages/monitor_list_page.dart';
 import 'package:norm_journal/pages/role_selection_page.dart';
 import 'package:norm_journal/pages/schedule_page.dart';
 import 'package:norm_journal/pages/student_list_page.dart';
@@ -283,10 +284,43 @@ Future<void> _checkHasSchedule() async {
                           style: const TextStyle(color: Colors.white),
                           ),
                   ),
-
                 ],
               ),
             ),
+            
+              if (_isTeacher)
+    Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: () {
+            // Переходим на список старост
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MonitorsListPage(
+                  changeLanguage: widget.changeLanguage,
+                  scheduleRepository: widget.scheduleRepository,
+                ),
+              ),
+            ).then((_) => _loadUserData()); // Обновляем данные, когда вернулись (выбрали группу)
+          },
+          icon:  Icon(Icons.group, color: Colors.white),
+          label: Text(
+            (_groupId == null || _groupId == "Teacher" || _groupId == "default_group")
+                ? 'Выбрать группу' 
+                : 'Группа: $_groupId (Сменить)',
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.indigo,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          ),
+        ),
+      ),
+    ),  
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: weekdays.asMap().entries.map((entry) {
