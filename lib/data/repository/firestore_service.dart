@@ -19,8 +19,8 @@ class FirestoreService {
         .get();
 
     if (query.docs.isNotEmpty) {
-      // Если нашли хоть один документ — группа занята
-      throw 'Группа $groupId уже зарегистрирована другим старостой!';
+      _logger.i('Староста $name ($groupId) вошел в существующий аккаунт');
+        return;
     }
 
       // Создаем документ в коллекции 'users'

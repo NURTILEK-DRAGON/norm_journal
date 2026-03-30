@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:norm_journal/data/repository/firestore_service.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'package:norm_journal/data/utils/user_preferences.dart';
 import 'package:norm_journal/pages/calendar_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterMonitorPage extends StatefulWidget {
   final ScheduleRepository? scheduleRepository;
@@ -21,31 +24,49 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
 
-    try{
-    await _firestoreService.saveMonitor(
-     name: _nameController.text.trim(), 
-     groupId: _groupController.text.trim());
-    await UserPreferences.saveUser(false, _groupController.text.trim());
+    final groupId = _groupController.text.trim();
 
-    if (mounted) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (_) => CalendarPage(
-            scheduleRepository: widget.scheduleRepository!,
-            changeLanguage: (l) {},
+    try {
+      // 1. Сохраняем или "входим" 
+      await _firestoreService.saveMonitor(
+        name: _nameController.text.trim(), 
+        groupId: groupId
+      );
+
+      // 2. Пытаемся скачать список студентов из Firebase для этой группы
+      final students = await _firestoreService.getStudentList(groupId);
+      
+      // 3. Сохраняем пользователя локально И передаем скачанных студентов (если они были)
+      final prefs = await SharedPreferences.getInstance();
+      if (students.isNotEmpty) {
+        // Если студенты нашлись, сохраняем их в память телефона
+        await prefs.setString('students', jsonEncode(students));
+      } else {
+        // Если студентов нет, очищаем старый список (на всякий случай)
+        await prefs.remove('students');
+      }
+
+      await UserPreferences.saveUser(false, groupId);
+
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (_) => CalendarPage(
+              scheduleRepository: widget.scheduleRepository!,
+              changeLanguage: (l) {},
+            ),
           ),
-        ),
-        (route) => false,
-      );
+          (route) => false,
+        );
+      }
+    } catch(e) {
+      if(mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e')),
+        );
+      }
     }
-  }catch(e){
-    if(mounted){
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('failure regis-on: $e'),)
-      );
-    }
-  }
   }
 
   @override

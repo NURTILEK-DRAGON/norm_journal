@@ -143,7 +143,7 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
                 ? Center(
                     child: Text(
                       widget.isTeacher 
-                      ? "today you don't have lessons"
+                      ? "today you don't have lessons for this group"
                       : l10n.noLessonsToday,
                       style: const TextStyle(fontSize: 18),
                     ),
