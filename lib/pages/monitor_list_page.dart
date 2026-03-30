@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:norm_journal/data/repository/firestore_service.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'package:norm_journal/pages/calendar_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,7 +39,7 @@ class _MonitorsListPageState extends State<MonitorsListPage> {
 
   // Список для отображения (с учетом поиска)
   List<Monitor> filteredMonitors = [];
-  final TextEditingController _searchController = TextEditingController();
+  final FirestoreService _firestoreService = FirestoreService();
 
   @override
   void initState() {
@@ -46,97 +47,77 @@ class _MonitorsListPageState extends State<MonitorsListPage> {
     filteredMonitors = allMonitors; // Изначально показываем всех
   }
 
-  void _filterMonitors(String query) {
-    setState(() {
-      filteredMonitors = allMonitors
-          .where((m) =>
-              m.name.toLowerCase().contains(query.toLowerCase()) ||
-              m.group.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    });
-  }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Список старост'),
-        backgroundColor: Colors.indigo,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              onChanged: _filterMonitors,
-              decoration: InputDecoration(
-                labelText: 'Поиск по группе или имени',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Список групп (старост)'),
+      backgroundColor: Colors.indigo,
+    ),
+    body: StreamBuilder<List<Map<String, dynamic>>>(
+      stream: _firestoreService.getMonitorsStream(),
+      builder: (context, snapshot) {
+        // 1. Пока данные грузятся
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // 2. Если произошла ошибка
+        if (snapshot.hasError) {
+          return Center(child: Text('Ошибка: ${snapshot.error}'));
+        }
+
+        // 3. Если данных нет
+        final monitors = snapshot.data ?? [];
+        if (monitors.isEmpty) {
+          return const Center(child: Text('Старосты еще не зарегистрировались'));
+        }
+
+        // 4. Отображаем реальный список из Firebase
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: monitors.length,
+          itemBuilder: (context, index) {
+            final data = monitors[index];
+            final String name = data['name'] ?? 'Без имени';
+            final String group = data['group_id'] ?? 'Без группы';
+
+            return Card(
+              elevation: 3,
+              margin: const EdgeInsets.only(bottom: 12),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.indigo.shade100,
+                  child: Text(group.isNotEmpty ? group[0] : '?'),
                 ),
-                filled: true,
-                fillColor: Colors.white,
+                title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: Text('Группа: $group'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () async {
+                  // Сохраняем выбранную группу в префы, чтобы календарь её видел
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('group_id', group);
+
+                  if (context.mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CalendarPage(
+                          changeLanguage: widget.changeLanguage,
+                          scheduleRepository: widget.scheduleRepository,
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
-            ),
-          ),
-          
-          // Список старост
-          Expanded(
-            child: filteredMonitors.isEmpty
-                ? const Center(child: Text('Старосты не найдены'))
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: filteredMonitors.length,
-                    itemBuilder: (context, index) {
-                      final monitor = filteredMonitors[index];
-                      return Card(
-                        elevation: 3,
-                        margin: const EdgeInsets.only(bottom: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20, 
-                            vertical: 8,
-                          ),
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.indigo.shade100,
-                            child: Text(
-                              monitor.group[0], // Первая буква группы
-                              style: const TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          title: Text(
-                            monitor.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                          subtitle: Text(
-                            'Группа: ${monitor.group}',
-                            style: TextStyle(color: Colors.grey.shade600),
-                          ),
-                          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                          onTap: () async{
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.setString('group_id', monitor.group);
-                           if(context.mounted){
-                            Navigator.push(
-                              context, MaterialPageRoute(builder:
-                              (context) => CalendarPage(
-                                changeLanguage: widget.changeLanguage,
-                                scheduleRepository: widget.scheduleRepository
-                              ) ));
-                           }
-                          },
-                        ),
-                      );
-                    },
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
+            );
+          },
+        );
+      },
+    ),
+  );
+}
 }
