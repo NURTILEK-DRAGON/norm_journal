@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:norm_journal/data/utils/user_preferences.dart';
 import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logger/logger.dart';
+import 'package:norm_journal/data/repository/firestore_service.dart';
 
 // Page : Student List Page
 class StudentListPage extends StatefulWidget {
@@ -18,6 +20,7 @@ class _StudentListPageState extends State<StudentListPage> {
   final TextEditingController _studentController = TextEditingController();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final Logger _logger = Logger(); 
+  final FirestoreService _fireStoreService = FirestoreService();
   
   @override
   void initState() {
@@ -43,10 +46,14 @@ class _StudentListPageState extends State<StudentListPage> {
 
   Future<void> _saveStudents() async {
     try {
+      final groupId = await UserPreferences.getGroupId();
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('students', jsonEncode(students));
-      if (context.mounted) {
-        // ignore: use_build_context_synchronously
+      await _fireStoreService.saveStudentList(groupId, students);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Student list saved successfully')),
+        );
         Navigator.pop(context);
       }
     } catch (e) {
