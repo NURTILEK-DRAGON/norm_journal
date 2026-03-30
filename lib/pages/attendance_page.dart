@@ -377,11 +377,17 @@ class _AttendancePageState extends State<AttendancePage> {
     try {
       var excel = Excel.createExcel();
       // В новых версиях excel лучше обращаться так:
-      Sheet sheetObject = excel[excel.getDefaultSheet()!];
+      Sheet sheetObject = excel[widget.groupId];
 
       // 1. Заголовки
-      sheetObject.cell(CellIndex.indexByString("A1")).value = TextCellValue("ФИО Студента");
-      sheetObject.cell(CellIndex.indexByString("B1")).value = TextCellValue("Статус");
+      sheetObject.cell(CellIndex.indexByString("A1"))
+      .value = TextCellValue("ФИО");
+
+      sheetObject.cell(CellIndex.indexByString("B1"))
+      .value = TextCellValue("Статус");
+
+      sheetObject.cell(CellIndex.indexByString("D1"))
+      .value = TextCellValue("дата: ${widget.date}.${widget.month}.${widget.year}");
 
       // 2. Цикл по твоей переменной attendance, которая теперь видна
       for (int i = 0; i < attendance.length; i++) {

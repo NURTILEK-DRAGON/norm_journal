@@ -8,6 +8,5 @@ class ConstantSubjects {
     'history',
     'english',
     'russian',
-    'biology',
   ];
 }

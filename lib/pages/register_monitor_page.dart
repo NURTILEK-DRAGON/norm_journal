@@ -63,13 +63,20 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
               const SizedBox(height: 32),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'ФИО', border: OutlineInputBorder(), prefixIcon: Icon(Icons.person)),
+                decoration: const InputDecoration(
+                  labelText: 'ФИО', 
+                  border: OutlineInputBorder(), 
+                  prefixIcon: Icon(Icons.person)),
                 validator: (v) => v!.isEmpty ? 'Введите ФИО' : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _groupController,
-                decoration: const InputDecoration(labelText: 'Название группы', hintText: 'Например: РМП-24', border: OutlineInputBorder(), prefixIcon: Icon(Icons.group)),
+                decoration: const InputDecoration(
+                  labelText: 'Название группы', 
+                  hintText: 'Например: РМП-24', 
+                  border: OutlineInputBorder(), 
+                  prefixIcon: Icon(Icons.group)),
                 validator: (v) => v!.isEmpty ? 'Введите группу' : null,
               ),
               const SizedBox(height: 32),
