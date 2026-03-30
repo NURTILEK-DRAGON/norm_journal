@@ -237,7 +237,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
   void _showToast(){
     Fluttertoast.showToast(
       msg:'Lessons saved successfully',
-      toastLength: Toast.LENGTH_LONG,
+      toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
       backgroundColor: Colors.cyanAccent,
       textColor: Colors.white,
@@ -330,8 +330,10 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
                     const SizedBox(width: 16),
                     ElevatedButton.icon(
                       onPressed: _onSavedButtonPressed,
-                      icon: const Icon(Icons.save, color: Colors.white),
-                      label: Text(l10n.saveLessonsButton, style: const TextStyle(color: Colors.white)),
+                      icon: const Icon(Icons.save, 
+                      color: Colors.white),
+                      label: Text(l10n.saveLessonsButton, 
+                      style: const TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

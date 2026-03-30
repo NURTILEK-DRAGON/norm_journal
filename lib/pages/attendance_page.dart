@@ -207,14 +207,16 @@ class _AttendancePageState extends State<AttendancePage> {
           if (snapshot.hasData && snapshot.data!.exists) {
             final data = snapshot.data!.data() as Map<String, dynamic>;
            
-           if(widget.isteacher&&(attendance.isEmpty)){
-            final List<dynamic>? remoteStudents = data['studentList']; 
+           if(widget.isteacher){
             final List<dynamic>? remoteRecords = data['records'];
-            if(remoteStudents != null && remoteRecords != null){
+
+            if(remoteRecords != null){
               Future.microtask(() {
+                if(mounted){
                 setState(() {
                   attendance = remoteRecords.map((x) => Map<String, dynamic>.from(x)).toList();
                 });
+                }
               });
             }
            }

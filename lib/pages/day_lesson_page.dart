@@ -3,6 +3,7 @@ import 'package:norm_journal/pages/attendance_page.dart';
 import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'package:norm_journal/data/utils/user_preferences.dart';
+import 'package:norm_journal/data/repository/firestore_service.dart';
 
 // Page : Day Lessons Page
 class DayLessonsPage extends StatefulWidget {
@@ -32,6 +33,8 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
   List<String> allDayLessons = []; 
   String? currentGroupId;
   bool isLoading = true;
+  final FirestoreService _firestoreService = FirestoreService();
+  List<String> _fetchedStudents = [];
 
   @override
   void initState() {
@@ -41,14 +44,22 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
 
   Future<void> _loadLessons() async {
     final groupId = widget.groupId ?? await UserPreferences.getGroupId();
+
     final weekSchedule = await widget.scheduleRepository
     .getScheduleForDate(widget.selectedDate, groupId);
+
+    final cloudStudents = await _firestoreService.getStudentList(groupId);
+
     final weekdayKey = _getWeekdayString(widget.selectedDate.weekday);
     List<String> allLessons = weekSchedule[weekdayKey] ?? [];
 
     setState(() {
       allDayLessons = allLessons;
       currentGroupId = groupId;
+      _fetchedStudents = cloudStudents.isNotEmpty 
+      ? cloudStudents 
+      : widget.students;
+
       if(widget.isTeacher) {
         lessonNames = allLessons
         .where((lesson) => widget.teacherSubjects.contains(lesson))
@@ -166,7 +177,7 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
                                   year: widget.selectedDate.year,
                                   lesson: 'lesson${realLessonIndex + 1}',
                                   displayLesson: lessonName,
-                                  students: widget.students,
+                                  students: _fetchedStudents,
                                   isteacher: widget.isTeacher, 
                                   groupId: currentGroupId ?? 'unknown',
                                   isGroupLesson: false, 
