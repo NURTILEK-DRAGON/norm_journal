@@ -12,6 +12,17 @@ class FirestoreService {
     required String groupId
   }) async {
     try {
+      final query = await _db
+      .collection('users')
+        .where('role', isEqualTo: 'monitor')
+        .where('group_id', isEqualTo: groupId)
+        .get();
+
+    if (query.docs.isNotEmpty) {
+      // Если нашли хоть один документ — группа занята
+      throw 'Группа $groupId уже зарегистрирована другим старостой!';
+    }
+
       // Создаем документ в коллекции 'users'
       await _db.collection('users').add({
         'name': name,
@@ -19,6 +30,7 @@ class FirestoreService {
         'group_id': groupId,
         'created_at': FieldValue.serverTimestamp(), // Время регистрации
       });
+      
       _logger.i('Староста $name ($groupId) успешно сохранен в Firestore');
     } catch (e) {
       _logger.e('Ошибка при сохранении старосты: $e');

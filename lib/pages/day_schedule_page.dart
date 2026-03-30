@@ -242,7 +242,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
       backgroundColor: Colors.cyanAccent,
       textColor: Colors.white,
       fontSize: 16,
-      timeInSecForIosWeb: 3,
+      timeInSecForIosWeb: 1,
       );
   }
 
