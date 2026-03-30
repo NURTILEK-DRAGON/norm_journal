@@ -1,8 +1,14 @@
+// ignore_for_file: curly_braces_in_flow_control_structures, deprecated_member_use
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'package:excel/excel.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AttendancePage extends StatefulWidget {
   final String groupId;
@@ -358,9 +364,69 @@ class _AttendancePageState extends State<AttendancePage> {
     return Column(
       children: [
         Text('$count', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
+        // ignore: duplicate_ignore
         // ignore: deprecated_member_use
         Text(label, style: TextStyle(fontSize: 10, color: color.withOpacity(0.8))),
       ],
     );
+  }
+
+  Future<void> exportToExcel() async {
+    try {
+      var excel = Excel.createExcel();
+      // В новых версиях excel лучше обращаться так:
+      Sheet sheetObject = excel[excel.getDefaultSheet()!];
+
+      // 1. Заголовки
+      sheetObject.cell(CellIndex.indexByString("A1")).value = TextCellValue("ФИО Студента");
+      sheetObject.cell(CellIndex.indexByString("B1")).value = TextCellValue("Статус");
+
+      // 2. Цикл по твоей переменной attendance, которая теперь видна
+      for (int i = 0; i < attendance.length; i++) {
+        var record = attendance[i];
+        String status = "Был(а)";
+        if (record['absent'] == true) {
+          status = "Н";
+        } else if (record['sick'] == true) status = "Б (Болезнь)";
+        else if (record['documented'] == true) status = "П (Причина)";
+        
+        if (record['lateTime'] != null) {
+          status += " (Оп: ${record['lateTime']})";
+        }
+
+        // Заполняем ячейки
+        sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: i + 1))
+            .value = TextCellValue(record['name'].toString());
+        
+        sheetObject.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: i + 1))
+            .value = TextCellValue(status);
+      }
+
+      // 3. Сохранение
+      var fileBytes = excel.save();
+      if (fileBytes == null) return;
+
+      final directory = await getTemporaryDirectory();
+      // Формируем имя файла: Группа_Дата.xlsx
+      final fileName = "Attendance_${widget.groupId}_${widget.date}_${widget.month}.xlsx";
+      final filePath = "${directory.path}/$fileName";
+      
+      final file = File(filePath);
+      await file.writeAsBytes(fileBytes);
+
+      // 4. Шаринг
+      await Share.shareXFiles(
+        [XFile(filePath)], 
+        text: 'Журнал посещаемости: группа ${widget.groupId}, дата ${widget.date}.${widget.month}'
+      );
+
+    } catch (e) {
+      debugPrint("Excel Export Error: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Ошибка при создании Excel: $e")),
+        );
+      }
+    }
   }
 }
