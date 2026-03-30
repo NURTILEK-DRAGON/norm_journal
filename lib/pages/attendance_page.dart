@@ -200,6 +200,8 @@ class _AttendancePageState extends State<AttendancePage> {
             IconButton(icon: const Icon(Icons.swap_horiz, size: 28), onPressed: _switchGroup),
           if (!widget.isteacher)
             IconButton(icon: const Icon(Icons.save), onPressed: _saveAttendance),
+            if(widget.isteacher)
+              IconButton(icon: const Icon(Icons.file_download), onPressed: exportToExcel),
         ],
       ),
       body: StreamBuilder<DocumentSnapshot>(
