@@ -24,6 +24,18 @@
   "@scheduleFor": {
     "description": "Label for the schedule day"
   },
+  "lessonsCount": "{count, plural, one{{count} lesson} other{{count} lessons}}",
+"@lessonsCount": {
+  "placeholders": {
+    "count": {
+      "type": "num"
+    }
+  }
+},
+"notSet": "Not set",
+"@notSet": {
+  "description": "Label for when a value is not set"
+},
   "addLessonButton": "Add Lesson",
   "@addLessonButton": {
     "description": "Button text for adding a lesson"
@@ -83,6 +95,10 @@
   "cancelButton": "Cancel",
   "@cancelButton": {
     "description": "Button text for canceling an action"
+  },
+  "weeklySetUp": "Weekly Setup",
+  "@weeklySetUp": {
+    "description": "Title for the weekly schedule setup page"
   },
   "weekday0": "Sun",
   "@weekday0": {

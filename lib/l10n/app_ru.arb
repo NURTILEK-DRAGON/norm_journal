@@ -22,8 +22,22 @@
   },
   "scheduleFor": "Расписание для",
   "@scheduleFor": {
-    "description": "Label for the schedule day"
+    "description": "Label for the schedule day"    
   },
+
+  "lessonsCount": "{count, plural, one{{count} урок} few{{count} урока} other{{count} уроков}}",
+"@lessonsCount": {
+  "placeholders": {
+    "count": {
+      "type": "num"
+    }
+  }
+},
+"notSet": "Не установлено",
+"@notSet": {
+  "description": "Label for when a value is not set"
+},
+
   "addLessonButton": "Добавить урок",
   "@addLessonButton": {
     "description": "Button text for adding a lesson"
@@ -83,6 +97,10 @@
   "cancelButton": "Отмена",
   "@cancelButton": {
     "description": "Button text for canceling an action"
+  },
+  "weeklySetUp": "Настройка расписания",
+  "@weeklySetUp": {
+    "description": "Title for the weekly schedule setup page"
   },
   "weekday0": "Вс",
   "@weekday0": {

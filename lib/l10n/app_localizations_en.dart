@@ -72,6 +72,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelButton => 'Cancel';
 
   @override
+  String get configureAllDays => 'Configure all days to proceed';
+
+  @override
+  String get readyToSave => 'Ready to Save';
+
+  @override
+  String get weeklySetUp => 'Weekly Setup';
+
+  @override
+  String get day1 => 'Monday';
+
+  @override
+  String get day2 => 'Tuesday';
+
+  @override
+  String get day3 => 'Wednesday';
+
+  @override
+  String get day4 => 'Thursday';
+
+  @override
+  String get day5 => 'Friday';
+
+  @override
+  String get day6 => 'Saturday';
+
+  @override
   String get weekday0 => 'Sun';
 
   @override

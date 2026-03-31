@@ -26,6 +26,7 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get scheduleFor => 'Расписание для';
 
+
   @override
   String get addLessonButton => 'Добавить урок';
 
@@ -72,9 +73,35 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cancelButton => 'Отмена';
 
   @override
-  String get weekday0 => 'Вс';
+  String get configureAllDays => 'Настройте все дни, чтобы продолжить';
 
   @override
+  String get readyToSave => 'Готово к сохранению';
+
+  @override
+  String get weeklySetUp => 'Настройка расписания';
+
+  @override
+  String get day1 => 'Понедельник';
+
+  @override
+  String get day2 => 'Вторник';
+
+  @override
+  String get day3 => 'Среда';
+
+  @override
+  String get day4 => 'Четверг';
+
+  @override
+  String get day5 => 'Пятница';
+
+  @override
+  String get day6 => 'Суббота'; 
+
+  @override
+  String get weekday0 => 'Вс';
+
   String get weekday1 => 'Пн';
 
   @override

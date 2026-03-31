@@ -15,7 +15,13 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
-  final List<String> days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  final List<String> days = [
+    'monday', 
+    'tuesday', 
+    'wednesday', 
+    'thursday', 
+    'friday', 
+    'saturday'];
   Map<String, List<String>> schedules = {};
   bool isLoading = true;
 
@@ -25,6 +31,18 @@ class _SchedulePageState extends State<SchedulePage> {
     schedules = {for (var day in days) day: []};
     _loadFromRepository();
   }
+
+  String _translateDayName(String day, AppLocalizations l10n) {
+  switch (day) {
+    case 'monday': return l10n.day1;    // Пн
+    case 'tuesday': return l10n.day2;   // Вт
+    case 'wednesday': return l10n.day3; // Ср
+    case 'thursday': return l10n.day4;  // Чт
+    case 'friday': return l10n.day5;    // Пт
+    case 'saturday': return l10n.day6;  // Сб
+    default: return day;
+  }
+}
 
   Future<void> _loadFromRepository() async {
     try {
@@ -111,7 +129,7 @@ class _SchedulePageState extends State<SchedulePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Weekly Setup", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(l10n.weeklySetUp, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Text("$filledCount / ${days.length}", style: const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold)),
             ],
           ),
@@ -127,7 +145,7 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
           const SizedBox(height: 8),
           Text(
-            progress == 1.0 ? "Ready to save!" : "Configure all days to proceed",
+            progress == 1.0 ? l10n.readyToSave : l10n.configureAllDays,
             style: TextStyle(color: Colors.grey[500], fontSize: 13),
           ),
         ],
@@ -159,7 +177,10 @@ class _SchedulePageState extends State<SchedulePage> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: isFilled ? Colors.blueAccent.withOpacity(0.2) : Colors.transparent, width: 2),
+            border: Border.all(
+              color: isFilled 
+              ? Colors.blueAccent.withOpacity(0.2) 
+              : Colors.transparent, width: 2),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,15 +192,22 @@ class _SchedulePageState extends State<SchedulePage> {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  isFilled ? Icons.calendar_today : Icons.calendar_today_outlined,
-                  color: isFilled ? Colors.blueAccent : Colors.grey[400],
+                  isFilled 
+                  ? Icons.calendar_today 
+                  : Icons.calendar_today_outlined,
+                  color: isFilled 
+                  ? Colors.blueAccent 
+                  : Colors.grey[400],
                   size: 24,
                 ),
               ),
               const Spacer(),
               Text(
-                day.capitalize(),
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+                _translateDayName(day, AppLocalizations.of(context)),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold, 
+                  fontSize: 16, 
+                  color: Colors.black87),
               ),
               const SizedBox(height: 4),
               Text(
