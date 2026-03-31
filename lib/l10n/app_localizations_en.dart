@@ -209,6 +209,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subjectRussian => 'Russian';
 
   @override
+  String get noLessonsYet => 'No lessons yet';
+
+  @override
+  String get savedSuccessfully => 'Saved successfully';
+
+  @override
   String confirmDeleteMessage(Object studentName) {
     return 'Are you sure you want to delete $studentName?';
   }

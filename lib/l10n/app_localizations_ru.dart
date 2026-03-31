@@ -209,6 +209,12 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get subjectRussian => 'Русский';
 
+  @override
+  String get noLessonsYet => 'Уроки еще не добавлены';
+
+  @override
+  String get savedSuccessfully => 'Успешно сохранено';
+
 
   @override
   String confirmDeleteMessage(Object studentName) {

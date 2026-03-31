@@ -33,8 +33,6 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
     });
   }
 
-  // --- ЛОГИКА (ОСТАВЛЕНА ТВОЯ, НЕМНОГО ОПТИМИЗИРОВАНА) ---
-
   Future<void> _addLesson() async {
     if (lessons.length >= 10) return;
     final l10n = AppLocalizations.of(context)!;
@@ -77,7 +75,9 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
           TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancelButton)),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, currentSelected),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent, 
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
             child: Text(l10n.addButton, style: const TextStyle(color: Colors.white)),
           ),
         ],
@@ -101,7 +101,6 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
           style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
         actions: [
-          // Кнопка сохранения теперь в углу — это удобнее
           TextButton.icon(
             onPressed: _onSavedButtonPressed,
             icon: const Icon(Icons.check, color: Colors.green),
@@ -118,7 +117,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
               : AnimatedList(
                   key: _listKey,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  initialItemCount: 0, // Управляется через initState
+                  initialItemCount: 0, 
                   itemBuilder: (context, index, animation) {
                     return _buildLessonCard(index, animation, l10n);
                   },
@@ -141,7 +140,9 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4))],
+              boxShadow: [BoxShadow(
+                color: Colors.black.withOpacity(0.03), 
+                blurRadius: 10, offset: const Offset(0, 4))],
             ),
             child: ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -153,7 +154,10 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
                   child: Text('${index + 1}', style: const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold)),
                 ),
               ),
-              title: Text(lessons[index], style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+              title: Text(ConstantSubjects.getTranslatedSubject(lessons[index], l10n), 
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600, 
+                  fontSize: 16)),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -207,7 +211,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
         children: [
           Icon(Icons.calendar_today_outlined, size: 80, color: Colors.grey[300]),
           const SizedBox(height: 16),
-          Text("No lessons yet", style: TextStyle(color: Colors.grey[400], fontSize: 18)),
+          Text(l10n.noLessonsYet, style: TextStyle(color: Colors.grey[400], fontSize: 18)),
         ],
       ),
     );
@@ -222,12 +226,13 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.red[50], // Подсветим красным при удалении для отклика
+            color: Colors.red[50], 
             borderRadius: BorderRadius.circular(16),
           ),
           child: ListTile(
             leading: const Icon(Icons.delete_outline, color: Colors.redAccent),
-            title: Text(lessonName, style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
+            title: Text(ConstantSubjects.getTranslatedSubject(lessonName, l10n), 
+            style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
           ),
         ),
       ),
@@ -277,7 +282,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
   void _onSavedButtonPressed() {
     _saveLessons();
     Fluttertoast.showToast(
-      msg: 'Saved successfully',
+      msg: AppLocalizations.of(context)!.savedSuccessfully,
       backgroundColor: Colors.green,
       textColor: Colors.white,
     );

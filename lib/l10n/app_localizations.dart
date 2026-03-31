@@ -346,6 +346,10 @@ abstract class AppLocalizations {
 
   String get subjectRussian;
 
+  String get noLessonsYet;
+
+  String get savedSuccessfully;
+
 
   /// Message for the delete confirmation dialog
   ///
