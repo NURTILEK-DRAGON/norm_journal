@@ -221,6 +221,7 @@ class _StudentListPageState extends State<StudentListPage> {
 
 
   Future<void> _editStudent(int index) async {
+    final l10n = AppLocalizations.of(context)!;
     final TextEditingController editController = TextEditingController(text: students[index]);
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
@@ -238,13 +239,13 @@ class _StudentListPageState extends State<StudentListPage> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, {'action': 'remove'}),
-            child: const Text('Remove', style: TextStyle(color: Colors.redAccent)),
+            onPressed: () => Navigator.pop(context, {'action': 'delete'}),
+            child: Text(l10n.deleteButton, style: TextStyle(color: Colors.redAccent)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, {'action': 'save', 'name': editController.text}),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-            child: const Text('Save', style: TextStyle(color: Colors.white)),
+            child: Text(l10n.saveButton, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

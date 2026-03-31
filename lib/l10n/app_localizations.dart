@@ -338,12 +338,6 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get deleteButton;
 
-  /// Button text for removing a student
-  ///
-  /// In en, this message translates to:
-  /// **'Remove Student'**
-  String get removeStudentButton;
-
   /// Title for the edit student name dialog
   ///
   /// In en, this message translates to:

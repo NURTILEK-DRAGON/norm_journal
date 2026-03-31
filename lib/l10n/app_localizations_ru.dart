@@ -188,9 +188,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get deleteButton => 'Удалить';
 
   @override
-  String get removeStudentButton => 'Удалить студента';
-
-  @override
   String get editStudentName => 'Редактировать имя студента';
 
   @override
