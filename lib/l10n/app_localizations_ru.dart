@@ -11,11 +11,17 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get createStudentListTitle => 'Создать список учеников';
 
+  @override 
+  String get studentsLable => 'Студенты';
+
   @override
   String get addStudentLabel => 'Добавить имя ученика';
 
   @override
   String get addButton => 'Добавить';
+
+  @override
+  String get changeSchedulelabel => 'Изменить';
 
   @override
   String get saveAndProceedButton => 'Сохранить и продолжить';

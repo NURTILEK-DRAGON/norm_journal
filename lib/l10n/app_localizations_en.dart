@@ -12,10 +12,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createStudentListTitle => 'Create Student List';
 
   @override
+  String get studentsLable => 'Students ';
+
+  @override
   String get addStudentLabel => 'Add Student Name';
 
   @override
   String get addButton => 'Add';
+
+  @override
+  String get changeSchedulelabel => 'Change';
 
   @override
   String get saveAndProceedButton => 'Save and Proceed';

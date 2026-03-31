@@ -218,12 +218,13 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   Widget _buildMonitorButtons() {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Expanded(
           child: _actionButton(
             icon: Icons.person_add_alt_1,
-            label: 'Students',
+            label: l10n.studentsLable,
             color: Colors.blue,
             onTap: () => Navigator.push(context, MaterialPageRoute(
               builder: (_) => const StudentListPage())).

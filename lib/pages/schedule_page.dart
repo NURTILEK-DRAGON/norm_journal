@@ -154,9 +154,10 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
-  Widget _buildDayCard(String day) {
+  Widget _buildDayCard(String day,) {
     final list = schedules[day]!;
     final isFilled = list.isNotEmpty;
+    final l10n = AppLocalizations.of(context)!;
 
     return Material(
       color: Colors.white,
@@ -212,7 +213,7 @@ class _SchedulePageState extends State<SchedulePage> {
               ),
               const SizedBox(height: 4),
               Text(
-                isFilled ? "${list.length} lessons" : "Not set",
+                isFilled ? l10n.lessonsCount(list.length) : l10n.notSet,
                 style: TextStyle(color: isFilled ? Colors.blueAccent : Colors.grey[400], fontSize: 13),
               ),
             ],

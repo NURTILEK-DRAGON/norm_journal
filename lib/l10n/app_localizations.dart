@@ -48,11 +48,15 @@ abstract class AppLocalizations {
   /// **'Create Student List'**
   String get createStudentListTitle;
 
+  String get studentsLable;
+
   /// Label for the text field to add a student name
   ///
   /// In en, this message translates to:
   /// **'Add Student Name'**
   String get addStudentLabel;
+
+  String get changeSchedulelabel;
 
   /// Button text for adding a student
   ///
@@ -197,7 +201,7 @@ abstract class AppLocalizations {
   String get day5;
 
   String get day6;
-  
+
 
   /// Abbreviation for Sunday
   ///
