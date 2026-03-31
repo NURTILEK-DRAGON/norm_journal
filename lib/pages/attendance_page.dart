@@ -254,7 +254,12 @@ class _AttendancePageState extends State<AttendancePage> {
           color: active ? color : Colors.grey[100],
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Text(label, style: TextStyle(color: active ? Colors.white : Colors.grey[500], fontWeight: FontWeight.bold)),
+        child: Text(label, 
+        style: TextStyle(
+          color: active 
+          ? Colors.white 
+          : Colors.grey[500], 
+          fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -279,13 +284,16 @@ class _AttendancePageState extends State<AttendancePage> {
     final p = attendance.where((a) => a['present'] == true).length;
     final a = attendance.where((a) => a['absent'] == true).length;
     final s = attendance.where((a) => a['sick'] == true).length;
+    final d = attendance.where((a) => a['documented'] == true).length;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 30),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5))],
+        boxShadow: [BoxShadow(
+          color: Colors.black.withOpacity(0.05), 
+          blurRadius: 10, offset: const Offset(0, -5))],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -293,6 +301,7 @@ class _AttendancePageState extends State<AttendancePage> {
           _summaryItem(p, "Present", Colors.green),
           _summaryItem(a, "Absent", Colors.red),
           _summaryItem(s, "Sick", Colors.orange),
+          _summaryItem(d, "Documented", Colors.blue),
         ],
       ),
     );
@@ -317,16 +326,23 @@ class _AttendancePageState extends State<AttendancePage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 8, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(
+          color: Colors.black.withOpacity(0.02), 
+          blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              CircleAvatar(backgroundColor: Colors.blue[50], radius: 18, child: Text(record['name'][0], style: const TextStyle(fontSize: 14))),
+              CircleAvatar(backgroundColor: Colors.blue[50], 
+              radius: 18, child: Text(record['name'][0], 
+              style: const TextStyle(fontSize: 14))),
               const SizedBox(width: 12),
-              Expanded(child: Text(record['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+              Expanded(child: Text(record['name'], 
+              style: const TextStyle(
+                fontWeight: FontWeight.bold, 
+                fontSize: 15))),
               _buildLateBadge(index, record),
             ],
           ),
@@ -372,7 +388,13 @@ class _AttendancePageState extends State<AttendancePage> {
             borderRadius: BorderRadius.circular(10),
             boxShadow: isSelected ? [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)] : [],
           ),
-          child: Text(text, textAlign: TextAlign.center, style: TextStyle(fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+          child: Text(
+            text, 
+            textAlign: TextAlign.center, 
+            style: TextStyle(
+              fontWeight: isSelected 
+              ? FontWeight.bold 
+              : FontWeight.normal)),
         ),
       ),
     );
