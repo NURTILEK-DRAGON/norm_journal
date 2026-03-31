@@ -24,6 +24,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changeSchedulelabel => 'Change';
 
   @override
+  String get setSchedulelabel => 'Set Up';
+
+  @override
   String get saveAndProceedButton => 'Save and Proceed';
 
   @override
@@ -59,7 +62,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get expelStudentTitle => 'Expel Student';
 
   @override
-  String get lessonsFor => 'Lessons -';
+  String get lessonsFor => 'Lessons';
 
   @override
   String get noLessonsToday => 'No lessons on this day';
@@ -111,6 +114,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get day6 => 'Saturday';
+
+  @override
+  String get day7 => 'Sunday';
 
   @override
   String get weekday0 => 'Sun';

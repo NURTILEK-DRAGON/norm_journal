@@ -58,6 +58,8 @@ abstract class AppLocalizations {
 
   String get changeSchedulelabel;
 
+  String get setSchedulelabel;
+
   /// Button text for adding a student
   ///
   /// In en, this message translates to:
@@ -201,6 +203,8 @@ abstract class AppLocalizations {
   String get day5;
 
   String get day6;
+
+  String get day7;
 
 
   /// Abbreviation for Sunday

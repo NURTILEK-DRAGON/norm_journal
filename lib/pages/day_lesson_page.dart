@@ -251,24 +251,34 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
   }
 
   String _getWeekdayLongName(int weekday, AppLocalizations l10n) {
-    const names = {
-      1: 'Monday', 
-      2: 'Tuesday', 
-      3: 'Wednesday', 
-      4: 'Thursday', 
-      5: 'Friday', 
-      6: 'Saturday', 
-      7: 'Sunday'};
-    return names[weekday] ?? '';
+    switch (weekday) {
+      case 1: return l10n.day1;    // Пн
+      case 2: return l10n.day2;   // Вт
+      case 3: return l10n.day3; // Ср
+      case 4: return l10n.day4;  // Чт
+      case 5: return l10n.day5;    // Пт
+      case 6: return l10n.day6;  // Сб
+      case 7: return l10n.day7;    // Вс
+      default: return '';
+    }
   }
 
   String _getMonthName(int month, AppLocalizations l10n) {
     switch (month) {
-      case 1: return l10n.month01; case 2: return l10n.month02; case 3: return l10n.month03;
-      case 4: return l10n.month04; case 5: return l10n.month05; case 6: return l10n.month06;
-      case 7: return l10n.month07; case 8: return l10n.month08; case 9: return l10n.month09;
-      case 10: return l10n.month10; case 11: return l10n.month11; case 12: return l10n.month12;
+      case 1: return l10n.month01;
+      case 2: return l10n.month02; 
+      case 3: return l10n.month03;
+      case 4: return l10n.month04;
+      case 5: return l10n.month05;
+      case 6: return l10n.month06;
+      case 7: return l10n.month07;
+      case 8: return l10n.month08;
+      case 9: return l10n.month09;
+      case 10: return l10n.month10;
+      case 11: return l10n.month11;
+      case 12: return l10n.month12;
       default: return '';
     }
   }
 }
+    

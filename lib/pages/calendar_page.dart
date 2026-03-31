@@ -235,7 +235,7 @@ class _CalendarPageState extends State<CalendarPage> {
         Expanded(
           child: _actionButton(
             icon: Icons.calendar_month,
-            label: hasSchedule ? 'Change' : 'Set',
+            label: hasSchedule ? l10n.changeSchedulelabel : l10n.setSchedulelabel,
             color: Colors.orange,
             onTap: () => Navigator.push(context, MaterialPageRoute(
               builder: (_) => SchedulePage(scheduleRepository: widget.scheduleRepository)))
