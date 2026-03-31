@@ -160,7 +160,7 @@ class _CalendarPageState extends State<CalendarPage> {
       body: Column(
         children: [
           _buildTopPanel(),
-          _buildWeekdayHeader(l10n),
+          _buildWeekdayHeader(l10n!),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -348,7 +348,7 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   String _getMonthName(BuildContext context, int month) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     switch (month) {
       case 1: return l10n.month01; case 2: return l10n.month02; case 3: return l10n.month03;
       case 4: return l10n.month04; case 5: return l10n.month05; case 6: return l10n.month06;

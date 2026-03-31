@@ -83,7 +83,7 @@ class _StudentListPageState extends State<StudentListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFF),
@@ -226,7 +226,7 @@ class _StudentListPageState extends State<StudentListPage> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(AppLocalizations.of(context).editStudentName),
+        title: Text(AppLocalizations.of(context)!.editStudentName),
         content: TextField(
           controller: editController,
           autofocus: true,

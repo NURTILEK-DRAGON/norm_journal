@@ -26,6 +26,20 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get scheduleFor => 'Расписание для';
 
+  @override
+  String lessonsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count уроков',
+      few: '$count урока',
+      one: '$count урок',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notSet => 'Не установлено';
 
   @override
   String get addLessonButton => 'Добавить урок';
@@ -64,7 +78,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get editLateTimeTitle => 'Редактировать время опоздания';
 
   @override
-  String get editLessonButton => 'Редактировать урок';
+  String get editTimeButton => 'Редактировать время';
 
   @override
   String get removeTimeButton => 'Удалить время';
@@ -73,16 +87,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cancelButton => 'Отмена';
 
   @override
-  String get configureAllDays => 'Настройте все дни, чтобы продолжить';
-
-  @override
-  String get readyToSave => 'Готово к сохранению';
-
-  @override
   String get weeklySetUp => 'Настройка расписания';
 
   @override
-  String get day1 => 'Понедельник';
+  String get day1 => 'Понедельник'; 
 
   @override
   String get day2 => 'Вторник';
@@ -97,11 +105,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get day5 => 'Пятница';
 
   @override
-  String get day6 => 'Суббота'; 
+  String get day6 => 'Суббота';
 
   @override
   String get weekday0 => 'Вс';
 
+  @override
   String get weekday1 => 'Пн';
 
   @override
@@ -154,6 +163,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get month12 => 'Декабрь';
+
+  @override
+  String get readyToSave => 'Готово к сохранению';
+
+  @override
+  String get configureAllDays => 'Настроить все дни';
 
   @override
   String get confirmDeleteTitle => 'Подтверждение удаления';

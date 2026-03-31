@@ -27,6 +27,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scheduleFor => 'Schedule for';
 
   @override
+  String lessonsCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lessons',
+      one: '$count lesson',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notSet => 'Not set';
+
+  @override
   String get addLessonButton => 'Add Lesson';
 
   @override
@@ -63,19 +77,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editLateTimeTitle => 'Edit Late Time';
 
   @override
-  String get editLessonButton => 'Edit Lesson';
+  String get editTimeButton => 'Edit Time';
 
   @override
   String get removeTimeButton => 'Remove Time';
 
   @override
   String get cancelButton => 'Cancel';
-
-  @override
-  String get configureAllDays => 'Configure all days to proceed';
-
-  @override
-  String get readyToSave => 'Ready to Save';
 
   @override
   String get weeklySetUp => 'Weekly Setup';
@@ -154,6 +162,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get month12 => 'December';
+
+  @override
+  String get readyToSave => 'Ready to Save';
+
+  @override
+  String get configureAllDays => 'Configure All Days';
 
   @override
   String get confirmDeleteTitle => 'Confirm Delete';

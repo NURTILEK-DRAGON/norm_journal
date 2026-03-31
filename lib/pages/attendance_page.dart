@@ -49,7 +49,7 @@ class _AttendancePageState extends State<AttendancePage> {
   String _getKey() => '${widget.year}-${widget.month}-${widget.date}-${widget.lesson}';
 
   String _getMonthName(int month) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return [
       '', l10n.month01, l10n.month02, l10n.month03, l10n.month04, l10n.month05, l10n.month06,
       l10n.month07, l10n.month08, l10n.month09, l10n.month10, l10n.month11, l10n.month12
@@ -468,10 +468,10 @@ class _AttendancePageState extends State<AttendancePage> {
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   itemCount: attendance.length,
-                  itemBuilder: (context, index) => _buildStudentCard(index, l10n),
+                  itemBuilder: (context, index) => _buildStudentCard(index, l10n!),
                 ),
               ),
-              _buildSummaryPanel(l10n),
+              _buildSummaryPanel(l10n!),
             ],
           );
         },

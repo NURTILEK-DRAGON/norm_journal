@@ -5,6 +5,7 @@ import 'package:norm_journal/pages/day_schedule_page.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'package:norm_journal/data/utils/user_preferences.dart';
 
+
 class SchedulePage extends StatefulWidget {
   final ScheduleRepository scheduleRepository;
 
@@ -74,7 +75,7 @@ class _SchedulePageState extends State<SchedulePage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final filledCount = days.where((d) => schedules[d]!.isNotEmpty).length;
     final progress = filledCount / days.length;
 
@@ -203,7 +204,7 @@ class _SchedulePageState extends State<SchedulePage> {
               ),
               const Spacer(),
               Text(
-                _translateDayName(day, AppLocalizations.of(context)),
+                _translateDayName(day, AppLocalizations.of(context)!),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold, 
                   fontSize: 16, 

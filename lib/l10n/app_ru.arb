@@ -102,6 +102,30 @@
   "@weeklySetUp": {
     "description": "Title for the weekly schedule setup page"
   },
+  "day1": "Понедельник",
+  "@day1": {
+    "description": "Name of the day Monday"
+  },
+  "day2": "Вторник",
+  "@day2": {
+    "description": "Name of the day Tuesday"
+  },
+  "day3": "Среда",
+  "@day3": {
+    "description": "Name of the day Wednesday"
+  },
+  "day4": "Четверг",
+  "@day4": {
+    "description": "Name of the day Thursday"
+  },
+  "day5": "Пятница",
+  "@day5": {
+    "description": "Name of the day Friday"
+  },
+  "day6": "Суббота",
+  "@day6": {
+    "description": "Name of the day Saturday"
+  },
   "weekday0": "Вс",
   "@weekday0": {
     "description": "Abbreviation for Sunday"
@@ -177,6 +201,14 @@
   "month12": "Декабрь",
   "@month12": {
     "description": "Name of the month December"
+  },
+  "readyToSave": "Готово к сохранению",
+  "@readyToSave": {
+    "description": "Label indicating that the schedule is ready to be saved"
+  },
+  "configureAllDays": "Настроить все дни",
+  "@configureAllDays": {
+    "description": "Button text for configuring all days of the week"
   },
   "confirmDeleteTitle": "Подтверждение удаления",
   "@confirmDeleteTitle": {

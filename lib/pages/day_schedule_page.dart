@@ -37,7 +37,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
 
   Future<void> _addLesson() async {
     if (lessons.length >= 10) return;
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     String? selectedSubject = ConstantSubjects.availableSubjects.first;
 
     final newName = await showDialog<String>(
@@ -87,7 +87,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFF),
       appBar: AppBar(
@@ -247,13 +247,13 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
     (context, animation) => _buildRemovedItem(
       removedItem, 
       animation, 
-      AppLocalizations.of(context)),
+      AppLocalizations.of(context)!),
     duration: const Duration(milliseconds: 300),
   );
 }
 
   Future<void> _editLesson(int index) async {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final newName = await showDialog<String>(
       context: context,
       builder: (context) => _buildSubjectDialog(l10n, l10n.editLessonTitle, lessons[index]),

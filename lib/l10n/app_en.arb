@@ -44,6 +44,10 @@
   "@saveLessonsButton": {
     "description": "Button text for saving lessons"
   },
+  "readyToSave": "Ready to Save",
+  "@readyToSave": {
+    "description": "Label indicating that the schedule is ready to be saved"
+  },
   "expelStudentButton": "Expel Student",
   "@expelStudentButton": {
     "description": "Button text for expelling a student"
@@ -99,6 +103,30 @@
   "weeklySetUp": "Weekly Setup",
   "@weeklySetUp": {
     "description": "Title for the weekly schedule setup page"
+  },
+  "day1": "Monday",
+  "@day1": {
+    "description": "Name of the first day of the week"
+  },
+  "day2": "Tuesday",
+  "@day2": {
+    "description": "Name of the second day of the week"
+  },
+  "day3": "Wednesday",
+  "@day3": {
+    "description": "Name of the third day of the week"
+  },
+  "day4": "Thursday",
+  "@day4": {
+    "description": "Name of the fourth day of the week"
+  },
+  "day5": "Friday",
+  "@day5": {
+    "description": "Name of the fifth day of the week"
+  },
+  "day6": "Saturday",
+  "@day6": {
+    "description": "Name of the sixth day of the week"
   },
   "weekday0": "Sun",
   "@weekday0": {
@@ -175,6 +203,10 @@
   "month12": "December",
   "@month12": {
     "description": "Name of the month December"
+  },
+  "configureAllDays": "Configure All Days",
+  "@configureAllDays": {
+    "description": "Button text for configuring all days of the week"
   },
   "confirmDeleteTitle": "Confirm Delete",
   "@confirmDeleteTitle": {
