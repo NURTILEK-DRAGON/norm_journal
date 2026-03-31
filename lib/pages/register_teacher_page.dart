@@ -4,6 +4,7 @@ import 'package:norm_journal/data/repository/firestore_service.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'package:norm_journal/data/utils/user_preferences.dart';
 import 'package:norm_journal/pages/calendar_page.dart';
+import 'package:norm_journal/l10n/app_localizations.dart';
 
 class RegisterTeacherPage extends StatefulWidget {
   final ScheduleRepository? scheduleRepository;
@@ -61,6 +62,7 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.cyan[50],
       appBar: AppBar(title: const Text('Регистрация учителя'), backgroundColor: Colors.blueAccent, foregroundColor: Colors.white),
@@ -84,11 +86,11 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
                 child: Container(
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
                   child: ListView.builder(
-                    itemCount: ConstantSubjects.availableSubjects.length,
+                    itemCount: ConstantSubjects.subjects.length,
                     itemBuilder: (context, index) {
-                      final s = ConstantSubjects.availableSubjects[index];
+                      final s = ConstantSubjects.subjects[index];
                       return CheckboxListTile(
-                        title: Text(s),
+                        title: Text(ConstantSubjects.getTranslatedSubject(s, l10n)),
                         value: _selectedSubjects.contains(s),
                         onChanged: (val) => setState(() => val! ? _selectedSubjects.add(s) : _selectedSubjects.remove(s)),
                       );

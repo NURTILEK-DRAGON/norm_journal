@@ -38,7 +38,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
   Future<void> _addLesson() async {
     if (lessons.length >= 10) return;
     final l10n = AppLocalizations.of(context)!;
-    String? selectedSubject = ConstantSubjects.availableSubjects.first;
+    String? selectedSubject = ConstantSubjects.subjects.first;
 
     final newName = await showDialog<String>(
       context: context,
@@ -68,7 +68,9 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
             prefixIcon: const Icon(Icons.book, color: Colors.blueAccent),
           ),
-          items: ConstantSubjects.availableSubjects.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+          items: ConstantSubjects.subjects.map((s) => 
+          DropdownMenuItem(value: s, 
+          child: Text(ConstantSubjects.getTranslatedSubject(s, l10n)))).toList(),
           onChanged: (v) => setDialogState(() => currentSelected = v),
         ),
         actions: [

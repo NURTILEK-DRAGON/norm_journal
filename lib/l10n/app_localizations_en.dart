@@ -185,6 +185,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmDeleteTitle => 'Confirm Delete';
 
   @override
+  String get subjectMath => 'Math';
+
+  @override
+  String get subjectEnglish => 'English';
+
+  @override
+  String get subjectPhysics => 'Physics';
+
+  @override
+  String get subjectChemistry => 'Chemistry';
+
+  @override
+  String get subjectBiology => 'Biology';
+
+  @override
+  String get subjectGeography => 'Geography';
+
+  @override
+  String get subjectHistory => 'History';
+
+  @override
+  String get subjectRussian => 'Russian';
+
+  @override
   String confirmDeleteMessage(Object studentName) {
     return 'Are you sure you want to delete $studentName?';
   }

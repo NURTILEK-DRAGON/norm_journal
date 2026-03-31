@@ -186,6 +186,31 @@ class AppLocalizationsRu extends AppLocalizations {
   String get confirmDeleteTitle => 'Подтверждение удаления';
 
   @override
+  String get subjectMath => 'Математика';
+
+  @override
+  String get subjectPhysics => 'Физика';
+
+  @override
+  String get subjectChemistry => 'Химия';
+
+  @override
+  String get subjectBiology => 'Биология';
+
+  @override
+  String get subjectGeography => 'География';
+
+  @override
+  String get subjectHistory => 'История';
+
+  @override
+  String get subjectEnglish => 'Английский';
+
+  @override
+  String get subjectRussian => 'Русский';
+
+
+  @override
   String confirmDeleteMessage(Object studentName) {
     return 'Вы уверены, что хотите удалить $studentName?';
   }

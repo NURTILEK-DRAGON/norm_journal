@@ -330,6 +330,23 @@ abstract class AppLocalizations {
   /// **'Confirm Delete'**
   String get confirmDeleteTitle;
 
+  String get subjectMath;
+
+  String get subjectPhysics;
+
+  String get subjectChemistry;
+
+  String get subjectBiology;
+
+  String get subjectGeography;
+
+  String get subjectHistory;
+
+  String get subjectEnglish;
+
+  String get subjectRussian;
+
+
   /// Message for the delete confirmation dialog
   ///
   /// In en, this message translates to:
