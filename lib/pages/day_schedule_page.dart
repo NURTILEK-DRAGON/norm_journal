@@ -5,13 +5,12 @@ import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:norm_journal/constant_subjects.dart';
+
 class DaySchedulePage extends StatefulWidget {
   final String day;
   final List<String> currentLessons;
 
-  const DaySchedulePage({super.key, 
-  required this.day, 
-  required this.currentLessons});
+  const DaySchedulePage({super.key, required this.day, required this.currentLessons});
 
   @override
   State<DaySchedulePage> createState() => _DaySchedulePageState();
@@ -26,333 +25,263 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
   void initState() {
     super.initState();
     lessons = List.from(widget.currentLessons);
+    // Плавное появление списка при входе
     WidgetsBinding.instance.addPostFrameCallback((_) {
       for (int i = 0; i < lessons.length; i++) {
-        _listKey.currentState?.insertItem(i, duration: const Duration(milliseconds: 500));
+        _listKey.currentState?.insertItem(i, duration: const Duration(milliseconds: 400));
       }
     });
   }
 
-  Future<void> _addLesson() async {
-  if (lessons.length >= 10) return;
-  
-  final l10n = AppLocalizations.of(context);
-  // Переменная для хранения выбранного в диалоге предмета
-  String? selectedSubject = ConstantSubjects.availableSubjects.first; 
+  // --- ЛОГИКА (ОСТАВЛЕНА ТВОЯ, НЕМНОГО ОПТИМИЗИРОВАНА) ---
 
-  final newName = await showDialog<String>(
-    context: context,
-    builder: (context) => StatefulBuilder( // Используем для обновления состояния внутри диалога
+  Future<void> _addLesson() async {
+    if (lessons.length >= 10) return;
+    final l10n = AppLocalizations.of(context);
+    String? selectedSubject = ConstantSubjects.availableSubjects.first;
+
+    final newName = await showDialog<String>(
+      context: context,
+      builder: (context) => _buildSubjectDialog(l10n, l10n.addLessonButton, selectedSubject),
+    );
+
+    if (newName != null && context.mounted) {
+      setState(() {
+        lessons.add(newName);
+        _listKey.currentState?.insertItem(lessons.length - 1);
+      });
+    }
+  }
+
+  // Общий метод для красивого диалога выбора предмета
+  Widget _buildSubjectDialog(AppLocalizations l10n, String title, String? initialValue) {
+    String? currentSelected = initialValue;
+    return StatefulBuilder(
       builder: (context, setDialogState) => AlertDialog(
-        title: Text(l10n.addLessonButton),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         content: DropdownButtonFormField<String>(
-          initialValue: selectedSubject,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.book, color: Colors.blue),
+          value: currentSelected,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.blue[50],
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+            prefixIcon: const Icon(Icons.book, color: Colors.blueAccent),
           ),
-          items: ConstantSubjects.availableSubjects.map((String subject) {
-            return DropdownMenuItem<String>(
-              value: subject,
-              child: Text(subject),
-            );
-          }).toList(),
-          onChanged: (value) {
-            setDialogState(() => selectedSubject = value);
-          },
+          items: ConstantSubjects.availableSubjects.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+          onChanged: (v) => setDialogState(() => currentSelected = v),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancelButton),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, selectedSubject),
-            child: Text(l10n.addButton),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancelButton)),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, currentSelected),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+            child: Text(l10n.addButton, style: const TextStyle(color: Colors.white)),
           ),
         ],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      ),
+    );
+  }
+
+  // --- UI ---
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFF),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        title: Text(
+          '${l10n.scheduleFor} ${widget.day.capitalize()}',
+          style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          // Кнопка сохранения теперь в углу — это удобнее
+          TextButton.icon(
+            onPressed: _onSavedButtonPressed,
+            icon: const Icon(Icons.check, color: Colors.green),
+            label: Text(l10n.saveButton, style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: lessons.isEmpty 
+              ? _buildEmptyState(l10n)
+              : AnimatedList(
+                  key: _listKey,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  initialItemCount: 0, // Управляется через initState
+                  itemBuilder: (context, index, animation) {
+                    return _buildLessonCard(index, animation, l10n);
+                  },
+                ),
+          ),
+          if (lessons.length < 10) _buildAddButton(l10n),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLessonCard(int index, Animation<double> animation, AppLocalizations l10n) {
+    return FadeTransition(
+      opacity: animation,
+      child: SlideTransition(
+        position: animation.drive(Tween<Offset>(begin: const Offset(0.5, 0), end: Offset.zero).chain(CurveTween(curve: Curves.easeOutCubic))),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4))],
+            ),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              leading: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(color: Colors.blue[50], shape: BoxShape.circle),
+                child: Center(
+                  child: Text('${index + 1}', style: const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              title: Text(lessons[index], style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit_outlined, color: Colors.grey, size: 20),
+                    onPressed: () => _editLesson(index),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.remove_circle_outline, color: Colors.redAccent, size: 20),
+                    onPressed: () => _removeLesson(index),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddButton(AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: InkWell(
+        onTap: _addLesson,
+        child: Container(
+          width: double.infinity,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.blueAccent.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.blueAccent.withOpacity(0.3), width: 2, style: BorderStyle.solid),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.add_rounded, color: Colors.blueAccent),
+              const SizedBox(width: 8),
+              Text(l10n.addLessonButton, style: const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold, fontSize: 16)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(AppLocalizations l10n) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.calendar_today_outlined, size: 80, color: Colors.grey[300]),
+          const SizedBox(height: 16),
+          Text("No lessons yet", style: TextStyle(color: Colors.grey[400], fontSize: 18)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRemovedItem(String lessonName, Animation<double> animation, AppLocalizations l10n) {
+  return FadeTransition(
+    opacity: animation,
+    child: SizeTransition(
+      sizeFactor: animation,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.red[50], // Подсветим красным при удалении для отклика
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: ListTile(
+            leading: const Icon(Icons.delete_outline, color: Colors.redAccent),
+            title: Text(lessonName, style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600)),
+          ),
+        ),
       ),
     ),
   );
-
-  if (newName != null && context.mounted) {
-    setState(() {
-      lessons.add(newName);
-      _listKey.currentState?.insertItem(
-        lessons.length - 1,
-        duration: const Duration(milliseconds: 500),
-      );
-    });
-  }
 }
 
-  Future<void> _editOrRemoveLesson(int index) async {
-    if (index >= lessons.length) return;
+  // --- ДОПОЛНИТЕЛЬНАЯ ЛОГИКА ---
+
+ void _removeLesson(int index) {
+  final removedItem = lessons[index]; 
+  
+  setState(() {
+    lessons.removeAt(index);
+  });
+
+  _listKey.currentState?.removeItem(
+    index,
+    (context, animation) => _buildRemovedItem(
+      removedItem, 
+      animation, 
+      AppLocalizations.of(context)),
+    duration: const Duration(milliseconds: 300),
+  );
+}
+
+  Future<void> _editLesson(int index) async {
     final l10n = AppLocalizations.of(context);
-    final result = await showDialog<Map<String, dynamic>>(
-      context: context, 
-      builder: (context) => AlertDialog(
-        title: Text(l10n.editLessonTitle), 
-        content: Text('${l10n.lessonsFor} "${lessons[index]}"'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, {'action': 'edit', 'index': index}),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.edit, color: Colors.blue, size: 20),
-                const SizedBox(width: 4),
-                Text(l10n.editLessonButton),
-              ],
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, {'action': 'remove', 'index': index}),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.delete, color: Colors.red, size: 20),
-                const SizedBox(width: 4),
-                Text(l10n.deleteButton, style: const TextStyle(color: Colors.red)),
-              ],
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancelButton),
-          ),
-        ],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      ),
+    final newName = await showDialog<String>(
+      context: context,
+      builder: (context) => _buildSubjectDialog(l10n, l10n.editLessonTitle, lessons[index]),
     );
-    if (result != null && context.mounted) {
-      setState(() {
-        if (result['action'] == 'edit') {
-          String? editedSubject = lessons[index];
-          showDialog<String>(
-            context: context,
-            builder: (context) => StatefulBuilder(
-              builder: (context, setDialogState) => AlertDialog(
-              title: Text(l10n.editLessonTitle),
-              content: DropdownButtonFormField<String>(
-                initialValue: ConstantSubjects.availableSubjects.contains(editedSubject) 
-                ? editedSubject 
-                : ConstantSubjects.availableSubjects.first,
-                decoration: InputDecoration(
-                  labelText: l10n.addLessonButton,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.book, color: Colors.blue),
-                ),
-                items: ConstantSubjects.availableSubjects.map((String subject) {
-                  return DropdownMenuItem<String>(
-                    value: subject,
-                    child: Text(subject),
-                  );
-                }).toList(),
-                onChanged: (value){
-                  setDialogState(() => editedSubject = value);
-                }
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(l10n.cancelButton),
-                ),
-                TextButton(
-                  onPressed: () {
-                      Navigator.pop(context, editedSubject);
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.save, color: Colors.blue, size: 20),
-                      const SizedBox(width: 4),
-                      Text(l10n.saveButton),
-                    ],
-                  ),
-                ),
-              ],
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            ),
-          ),
-          ).then((newName){
-            if(newName != null && context.mounted){
-              setState(() {
-                lessons[index] = newName;
-              });
-            }
-          }
-          );
-        } else if (result['action'] == 'remove') {
-          final removed = lessons.removeAt(index);
-          _listKey.currentState?.removeItem(
-            index,
-            (context, animation) => SlideTransition(
-              position: animation.drive(
-                Tween<Offset>(
-                  begin: const Offset(1.0, 0.0),
-                  end: Offset.zero,
-                ).chain(CurveTween(curve: Curves.easeInOut)),
-              ),
-              child: FadeTransition(
-                opacity: animation.drive(
-                  Tween<double>(
-                    begin: 1.0,
-                    end: 0.0,
-                  ).chain(CurveTween(curve: Curves.easeIn)),
-                ),
-                child: Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  child: ListTile(
-                    title: Text(removed, style: const TextStyle(fontWeight: FontWeight.bold)),
-                    trailing: const Icon(Icons.delete, color: Colors.red),
-                  ),
-                ),
-              ),
-            ),
-            duration: const Duration(milliseconds: 600),
-          );
-        }
-      },
-      );
-      }
+    if (newName != null) setState(() => lessons[index] = newName);
   }
 
   Future<void> _saveLessons() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('schedule_${widget.day}', jsonEncode(lessons));
-      if (context.mounted) {
-        // ignore: use_build_context_synchronously
-        Navigator.pop(context, lessons);
-      }
+      // ignore: use_build_context_synchronously
+      if (context.mounted) Navigator.pop(context, lessons);
     } catch (e) {
-      _logger.e('Error saving lessons for ${widget.day}: $e');
+      _logger.e('Error saving: $e');
     }
   }
 
-  void _showToast(){
-    Fluttertoast.showToast(
-      msg:'Lessons saved successfully',
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      backgroundColor: Colors.cyanAccent,
-      textColor: Colors.white,
-      fontSize: 16,
-      timeInSecForIosWeb: 1,
-      );
-  }
-
-  void _onSavedButtonPressed(){
+  void _onSavedButtonPressed() {
     _saveLessons();
-    _showToast();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('${l10n.scheduleFor} ${widget.day.capitalize()}'),
-        backgroundColor: Colors.blueAccent,
-        elevation: 10,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue[50]!, Colors.white],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-           Expanded(
-  child: AnimatedList(
-    key: _listKey,
-    // безопаснее явно указывать начальную длину
-    initialItemCount: lessons.length,
-    itemBuilder: (BuildContext context, int index, Animation<double> animation) {
-      if (index >= lessons.length) return const SizedBox.shrink();
-
-      final  lesson = lessons[index]; 
-        
-      return SlideTransition(
-        position: animation.drive(
-          Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero)
-              .chain(CurveTween(curve: Curves.easeInOutCirc)),
-        ),
-        child: FadeTransition(
-          opacity: animation,
-          child: Card(
-            elevation: 4,
-            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: ListTile(
-  leading: const Icon(Icons.book, color: Colors.blue),
-  title: Text(
-    lesson,
-    style: const TextStyle(fontWeight: FontWeight.bold),
-  ),
-  trailing: IconButton(
-    icon: const Icon(Icons.edit, color: Colors.blue),
-    onPressed: () => _editOrRemoveLesson(index),
-  ),
-),
-
-          ),
-        ),
-      );
-    },
-  ),
-),
-            if (lessons.length < 10)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 50.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: _addLesson,
-                      icon: const Icon(Icons.add, color: Colors.white),
-                      label: Text(l10n.addLessonButton, style: const TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                        elevation: 5,
-                        backgroundColor: Colors.green,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    ElevatedButton.icon(
-                      onPressed: _onSavedButtonPressed,
-                      icon: const Icon(Icons.save, 
-                      color: Colors.white),
-                      label: Text(l10n.saveLessonsButton, 
-                      style: const TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                        elevation: 5,
-                        backgroundColor: Colors.blue,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
-      ),
+    Fluttertoast.showToast(
+      msg: 'Saved successfully',
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
     );
   }
 }
 
 extension on String {
-  String capitalize() {
-    return isNotEmpty ? '${this[0].toUpperCase()}${substring(1)}' : '';
-  }
-  }
+  String capitalize() => isNotEmpty ? '${this[0].toUpperCase()}${substring(1)}' : '';
+}
