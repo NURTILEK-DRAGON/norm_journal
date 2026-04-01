@@ -4,12 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:norm_journal/data/repository/firestore_service.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'package:norm_journal/data/utils/user_preferences.dart';
+import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:norm_journal/pages/calendar_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterMonitorPage extends StatefulWidget {
   final ScheduleRepository? scheduleRepository;
-  const RegisterMonitorPage({super.key, this.scheduleRepository});
+  final Function(Locale)? changeLanguage;
+
+  const RegisterMonitorPage({
+    super.key, 
+    this.scheduleRepository,
+    required this.changeLanguage,
+  });
 
   @override
   State<RegisterMonitorPage> createState() => _RegisterMonitorPageState();
@@ -20,6 +27,19 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
   final _nameController = TextEditingController();
   final _groupController = TextEditingController();
   final FirestoreService _firestoreService = FirestoreService();
+
+   Widget _buildLanguagePicker() {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.language, color: Colors.blueAccent),
+      onSelected: (val) => widget.changeLanguage!(
+        val == 'en' ? const Locale('en') : const Locale('ru'),
+      ),
+      itemBuilder: (ctx) => [
+        const PopupMenuItem(value: 'en', child: Text('English')),
+        const PopupMenuItem(value: 'ru', child: Text('Русский')),
+      ],
+    );
+  }
 
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
@@ -71,9 +91,13 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.cyan[50],
-      appBar: AppBar(title: const Text('Регистрация старосты'), backgroundColor: Colors.green, foregroundColor: Colors.white),
+      appBar: AppBar(
+        title: const Text('Регистрация старосты'), 
+        actions: [_buildLanguagePicker()],
+        backgroundColor: Colors.green, foregroundColor: Colors.white),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Form(
@@ -84,21 +108,21 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
               const SizedBox(height: 32),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'ФИО', 
+                decoration: InputDecoration(
+                  labelText: l10n.fullName, 
                   border: OutlineInputBorder(), 
                   prefixIcon: Icon(Icons.person)),
-                validator: (v) => v!.isEmpty ? 'Введите ФИО' : null,
+                validator: (v) => v!.isEmpty ? l10n.enterFullName : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _groupController,
-                decoration: const InputDecoration(
-                  labelText: 'Название группы', 
-                  hintText: 'Например: РМП-24', 
+                decoration: InputDecoration(
+                  labelText: l10n.groupNameLabel, 
+                  hintText: l10n.groupNameHint, 
                   border: OutlineInputBorder(), 
                   prefixIcon: Icon(Icons.group)),
-                validator: (v) => v!.isEmpty ? 'Введите группу' : null,
+                validator: (v) => v!.isEmpty ? l10n.enterGroupName : null,
               ),
               const SizedBox(height: 32),
               SizedBox(
@@ -109,7 +133,7 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
                     backgroundColor: Colors.green, 
                     foregroundColor: Colors.white),
                   onPressed: _register,
-                  child: const Text('Зарегистрироваться', style: TextStyle(fontSize: 16)),
+                  child:  Text(l10n.register, style: TextStyle(fontSize: 16)),
                 ),
               ),
             ],

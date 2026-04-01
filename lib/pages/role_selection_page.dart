@@ -2,15 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
 import 'register_monitor_page.dart';
 import 'register_teacher_page.dart';
+import 'package:norm_journal/l10n/app_localizations.dart';
 
-class RoleSelectionPage extends StatelessWidget {
+
+class RoleSelectionPage extends StatefulWidget {
   final ScheduleRepository? scheduleRepository;
+  final Function(Locale)? changeLanguage;
 
-  const RoleSelectionPage({super.key, this.scheduleRepository});
+  const RoleSelectionPage({
+    super.key, 
+    this.scheduleRepository,
+    required this.changeLanguage,});
+
+  @override
+  State<RoleSelectionPage> createState() => _RoleSelectionPageState();
+}
+  
+  class _RoleSelectionPageState extends State<RoleSelectionPage> {
+  
+  Widget _buildLanguagePicker() {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.language, color: Colors.blueAccent),
+      onSelected: (val) => widget.changeLanguage!(
+        val == 'en' ? const Locale('en') : const Locale('ru'),
+      ),
+      itemBuilder: (ctx) => [
+        const PopupMenuItem(value: 'en', child: Text('English')),
+        const PopupMenuItem(value: 'ru', child: Text('Русский')),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+      appBar: AppBar(
+        actions: [_buildLanguagePicker()],
+        backgroundColor: Colors.transparent,
+        elevation: 0,),
       backgroundColor: Colors.cyan[50],
       body: Center(
         child: SingleChildScrollView(
@@ -20,12 +50,15 @@ class RoleSelectionPage extends StatelessWidget {
             children: [
               const Icon(Icons.school, size: 100, color: Colors.blueAccent),
               const SizedBox(height: 24),
-              const Text(
-                'Кто вы?',
+              Text(
+                l10n.whoAreYou,
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              const Text('Выберите вашу роль для настройки профиля'),
+              Text(
+                l10n.selectYourRole,
+                style: TextStyle(fontSize: 18),
+              ),
               const SizedBox(height: 40),
 
               // Кнопка Старосты
@@ -36,12 +69,18 @@ class RoleSelectionPage extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 icon: const Icon(Icons.person_add, color: Colors.white),
-                label: const Text('Я Староста', style: TextStyle(color: Colors.white, fontSize: 18)),
+                label: Text(
+                  l10n.iAmMonitor,
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => RegisterMonitorPage(scheduleRepository: scheduleRepository),
+                      builder: (_) => RegisterMonitorPage(
+                        scheduleRepository: widget.scheduleRepository,
+                        changeLanguage: widget.changeLanguage,
+                      ),
                     ),
                   );
                 },
@@ -57,12 +96,18 @@ class RoleSelectionPage extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 icon: const Icon(Icons.assignment_ind, color: Colors.white),
-                label: const Text('Я Преподаватель', style: TextStyle(color: Colors.white, fontSize: 18)),
+                label: Text(
+                  l10n.iAmTeacher,
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => RegisterTeacherPage(scheduleRepository: scheduleRepository),
+                      builder: (_) => RegisterTeacherPage(
+                        scheduleRepository: widget.scheduleRepository,
+                        changeLanguage: widget.changeLanguage,
+                      ),
                     ),
                   );
                 },
@@ -73,4 +118,4 @@ class RoleSelectionPage extends StatelessWidget {
       ),
     );
   }
-}
+ }

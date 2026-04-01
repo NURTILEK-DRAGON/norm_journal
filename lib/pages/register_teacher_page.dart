@@ -8,7 +8,12 @@ import 'package:norm_journal/l10n/app_localizations.dart';
 
 class RegisterTeacherPage extends StatefulWidget {
   final ScheduleRepository? scheduleRepository;
-  const RegisterTeacherPage({super.key, this.scheduleRepository});
+  final Function(Locale)? changeLanguage;
+
+  const RegisterTeacherPage({
+    super.key, 
+    this.scheduleRepository, 
+    required this.changeLanguage, });
 
   @override
   State<RegisterTeacherPage> createState() => _RegisterTeacherPageState();
@@ -19,6 +24,19 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
   final _nameController = TextEditingController();
   final List<String> _selectedSubjects = [];
   final FirestoreService _firestoreService = FirestoreService();
+
+    Widget _buildLanguagePicker() {
+      return PopupMenuButton<String>(
+        icon: const Icon(Icons.language, color: Colors.blueAccent),
+        onSelected: (val) => widget.changeLanguage!(
+          val == 'en' ? const Locale('en') : const Locale('ru'),
+        ),
+        itemBuilder: (ctx) => [
+          const PopupMenuItem(value: 'en', child: Text('English')),
+          const PopupMenuItem(value: 'ru', child: Text('Русский')),
+        ],
+      );
+    }
 
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
@@ -65,7 +83,11 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.cyan[50],
-      appBar: AppBar(title: const Text('Регистрация учителя'), backgroundColor: Colors.blueAccent, foregroundColor: Colors.white),
+      appBar: AppBar(title:  Text(l10n.teacherRegistrationTitle), 
+      actions: [
+        _buildLanguagePicker()
+      ],
+      backgroundColor: Colors.blueAccent, foregroundColor: Colors.white),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Form(
@@ -76,15 +98,21 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
               const SizedBox(height: 24),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'ФИО', border: OutlineInputBorder(), prefixIcon: Icon(Icons.person)),
-                validator: (v) => v!.isEmpty ? 'Введите ФИО' : null,
+                decoration: InputDecoration(
+                  labelText: l10n.fullName, 
+                  border: OutlineInputBorder(), 
+                  prefixIcon: Icon(Icons.person)),
+                validator: (v) => v!.isEmpty ? l10n.enterFullName : null,
               ),
               const SizedBox(height: 20),
-              const Text('Выберите ваши предметы:', style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(l10n.selectSubjects, style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
+                  decoration: BoxDecoration(
+                    color: Colors.white, 
+                    borderRadius: BorderRadius.circular(8), 
+                    border: Border.all(color: Colors.grey.shade300)),
                   child: ListView.builder(
                     itemCount: ConstantSubjects.subjects.length,
                     itemBuilder: (context, index) {
