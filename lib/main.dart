@@ -93,7 +93,9 @@ class _AttendanceAppState extends State<AttendanceApp> {
           changeLanguage: _changeLanguage,
           scheduleRepository: widget.scheduleRepository
           )
-          :  RoleSelectionPage(scheduleRepository: widget.scheduleRepository,)
+          :  RoleSelectionPage(
+          scheduleRepository: widget.scheduleRepository, 
+          changeLanguage: _changeLanguage,)
       );
   }
 }

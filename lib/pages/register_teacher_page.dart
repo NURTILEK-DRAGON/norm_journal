@@ -27,7 +27,9 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
 
     Widget _buildLanguagePicker() {
       return PopupMenuButton<String>(
-        icon: const Icon(Icons.language, color: Colors.blueAccent),
+        icon: const Icon(
+          Icons.language, 
+          color: Colors.white),
         onSelected: (val) => widget.changeLanguage!(
           val == 'en' ? const Locale('en') : const Locale('ru'),
         ),
@@ -120,7 +122,9 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
                       return CheckboxListTile(
                         title: Text(ConstantSubjects.getTranslatedSubject(s, l10n)),
                         value: _selectedSubjects.contains(s),
-                        onChanged: (val) => setState(() => val! ? _selectedSubjects.add(s) : _selectedSubjects.remove(s)),
+                        onChanged: (val) => setState(() => val! 
+                        ? _selectedSubjects.add(s) 
+                        : _selectedSubjects.remove(s)),
                       );
                     },
                   ),
@@ -131,9 +135,11 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent, foregroundColor: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent, 
+                    foregroundColor: Colors.white),
                   onPressed: _register,
-                  child: const Text('Зарегистрироваться', style: TextStyle(fontSize: 16)),
+                  child: Text(l10n.register, style: TextStyle(fontSize: 16)),
                 ),
               ),
             ],

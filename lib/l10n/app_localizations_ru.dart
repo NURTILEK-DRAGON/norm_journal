@@ -186,7 +186,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get confirmDeleteTitle => 'Подтверждение удаления';
 
   @override
-  String get subjectMath => 'Математика';
+  String get subjectAlgebra => 'Алгебра';
 
   @override
   String get subjectPhysics => 'Физика';
@@ -208,6 +208,24 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get subjectRussian => 'Русский';
+
+  @override
+  String get subjectRussianLiterature => 'Русская литература';
+
+  @override
+  String get subjectKyrgyz => 'Кыргызский';
+
+  @override
+  String get subjectKyrgyzLiterature => 'Кыргызская литература';
+
+  @override
+  String get subjectPE => 'Физическая культура';
+
+  @override
+  String get subjectPME => 'ДПМ';
+
+  @override
+  String get subjectFBE => 'ОБиП';
 
   @override
   String get noLessonsYet => 'Уроки еще не добавлены';
@@ -232,4 +250,48 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get editLessonTitle => 'Редактировать урок';
+
+  @override
+  String get whoAreYou => 'Кто вы?';
+
+  @override
+  String get selectYourRole => 'Выберите вашу роль для настройки профиля';
+
+  @override
+  String get iAmMonitor => 'Я Староста';
+
+  @override
+  String get iAmTeacher => 'Я Преподаватель';
+
+  @override
+  String get monitorRegistrationTitle => 'Регистрация старосты';
+
+  @override
+  String get teacherRegistrationTitle => 'Регистрация преподавателя';
+
+  @override
+  String get enterGroupName => 'Введите группы';
+
+  @override
+  String get groupNameLabel => 'Название группы';
+
+  @override
+  String get groupNameHint => 'Например: РМП-24';
+
+  @override
+  String get fullName => 'ФИО';
+
+  @override
+  String get enterFullName => 'Введите ФИО';
+
+  @override
+  String get selectSubjects => 'Выберите предметы:';
+
+  @override
+  String get selectAnySubject => 'Выберите хотя бы один предмет';
+
+  @override
+  String get register => 'Зарегистрироваться';
+
+
 }

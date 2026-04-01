@@ -330,7 +330,7 @@ abstract class AppLocalizations {
   /// **'Confirm Delete'**
   String get confirmDeleteTitle;
 
-  String get subjectMath;
+  String get subjectAlgebra;
 
   String get subjectPhysics;
 
@@ -345,6 +345,18 @@ abstract class AppLocalizations {
   String get subjectEnglish;
 
   String get subjectRussian;
+
+  String get subjectRussianLiterature;
+
+  String get subjectKyrgyz;
+
+  String get subjectKyrgyzLiterature;
+
+  String get subjectPE;
+
+  String get subjectPME;
+
+  String get subjectFBE;
 
   String get noLessonsYet;
 
@@ -380,6 +392,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit Lesson'**
   String get editLessonTitle;
+
+  String get whoAreYou;
+
+  String get selectYourRole;
+
+  String get iAmMonitor;
+
+  String get iAmTeacher;
+
+  String get monitorRegistrationTitle;
+
+  String get enterGroupName;
+
+  String get groupNameLabel;
+
+  String get groupNameHint;
+
+  String get teacherRegistrationTitle;
+
+  String get fullName;
+
+  String get enterFullName;
+
+  String get selectSubjects;
+
+  String get selectAnySubject;
+
+  String get register;
+
+
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

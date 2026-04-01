@@ -185,7 +185,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmDeleteTitle => 'Confirm Delete';
 
   @override
-  String get subjectMath => 'Math';
+  String get subjectAlgebra => 'Algebra';
 
   @override
   String get subjectEnglish => 'English';
@@ -209,6 +209,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subjectRussian => 'Russian';
 
   @override
+  String get subjectRussianLiterature => 'Russian Literature';
+
+  @override
+  String get subjectKyrgyz => 'Kyrgyz';
+
+  @override
+  String get subjectKyrgyzLiterature => 'Kyrgyz Literature';
+
+  @override
+  String get subjectPE => 'Physical Education';
+
+  @override
+  String get subjectPME => 'PME';
+
+  @override
+  String get subjectFBE => 'FBE';
+
+  @override
   String get noLessonsYet => 'No lessons yet';
 
   @override
@@ -230,4 +248,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editLessonTitle => 'Edit Lesson';
+
+  @override
+  String get whoAreYou => 'Who are you?';
+
+  @override
+  String get selectYourRole => 'Select your role';
+
+  @override
+  String get iAmMonitor => 'I am a Monitor';
+
+  @override
+  String get iAmTeacher => 'I am a Teacher';
+
+  @override
+  String get monitorRegistrationTitle => 'Monitor Registration';
+
+  @override
+  String get teacherRegistrationTitle => 'Teacher Registration';
+
+  @override
+  String get enterGroupName => 'Enter Group Name';
+
+  @override
+  String get groupNameLabel => 'Group Name';
+
+  @override
+  String get groupNameHint => 'E.g. RMP-24';
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get enterFullName => 'Enter Full Name';
+
+  @override
+  String get selectSubjects => 'Select Subjects';
+
+  @override
+  String get selectAnySubject => 'Select at least one subject';
+
+  @override
+  String get register => 'Register';
 }

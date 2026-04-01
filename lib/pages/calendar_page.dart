@@ -108,7 +108,10 @@ class _CalendarPageState extends State<CalendarPage> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (_) => RoleSelectionPage(
-                    scheduleRepository: widget.scheduleRepository)),
+                    scheduleRepository: widget.scheduleRepository, 
+                    changeLanguage: (Locale locale) {  },
+                     )
+                    ),
                   (route) => false,
                 );
               }
@@ -133,7 +136,7 @@ class _CalendarPageState extends State<CalendarPage> {
     if (_isLoading) return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFF), // Очень светлый серо-голубой фон
+      backgroundColor: const Color(0xFFF8FAFF), 
       appBar: AppBar(
         title: Text(
           '${_getMonthName(context, currentMonth.month)} ${currentMonth.year}',
