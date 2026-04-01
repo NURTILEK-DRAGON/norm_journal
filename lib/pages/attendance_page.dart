@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:norm_journal/constant_subjects.dart';
 
 class AttendancePage extends StatefulWidget {
   final String groupId;
@@ -298,10 +299,10 @@ class _AttendancePageState extends State<AttendancePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _summaryItem(p, "Present", Colors.green),
-          _summaryItem(a, "Absent", Colors.red),
-          _summaryItem(s, "Sick", Colors.orange),
-          _summaryItem(d, "Documented", Colors.blue),
+          _summaryItem(p, l10n.presentStatus, Colors.green),
+          _summaryItem(a, l10n.absentStatus, Colors.red),
+          _summaryItem(s, l10n.sickStatus, Colors.orange),
+          _summaryItem(d, l10n.documentedStatus, Colors.blue),
         ],
       ),
     );
@@ -404,10 +405,10 @@ class _AttendancePageState extends State<AttendancePage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final displayTitle = widget.displayLesson 
-    ?? widget.lesson.replaceAll('lesson', 'Lesson ');
-
+    final l10n = AppLocalizations.of(context)!;
+    final displayTitle = widget.displayLesson != null 
+      ? ConstantSubjects.getTranslatedSubject(widget.displayLesson!, l10n)
+      : widget.lesson.replaceAll('lesson', '${l10n.lesson} ');
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
@@ -468,10 +469,10 @@ class _AttendancePageState extends State<AttendancePage> {
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   itemCount: attendance.length,
-                  itemBuilder: (context, index) => _buildStudentCard(index, l10n!),
+                  itemBuilder: (context, index) => _buildStudentCard(index, l10n),
                 ),
               ),
-              _buildSummaryPanel(l10n!),
+              _buildSummaryPanel(l10n),
             ],
           );
         },

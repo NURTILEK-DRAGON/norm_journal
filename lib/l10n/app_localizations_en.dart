@@ -50,6 +50,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notSet => 'Not set';
 
   @override
+  String get presentStatus => 'Present';
+
+  @override
+  String get absentStatus => 'Absent';
+
+  @override
+  String get sickStatus => 'Sick';
+
+  @override
+  String get documentedStatus => 'Documented';
+
+  @override
   String get addLessonButton => 'Add Lesson';
 
   @override
@@ -66,6 +78,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noLessonsToday => 'No lessons on this day';
+
+  @override
+  String get lesson => 'Lesson';
 
   @override
   String get presentLabel => 'Present';

@@ -393,6 +393,16 @@ abstract class AppLocalizations {
   /// **'Edit Lesson'**
   String get editLessonTitle;
 
+  String get presentStatus;
+
+  String get absentStatus;
+
+  String get sickStatus;
+
+  String get documentedStatus;
+
+  String get lesson;
+
   String get whoAreYou;
 
   String get selectYourRole;

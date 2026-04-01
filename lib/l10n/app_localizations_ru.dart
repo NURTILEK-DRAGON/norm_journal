@@ -51,6 +51,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get notSet => 'Не установлено';
 
   @override
+  String get presentStatus => 'Присутствует';
+
+  @override
+  String get absentStatus => 'Отсутствует';
+
+  @override
+  String get sickStatus => 'Болен';
+
+  @override
+  String get documentedStatus => 'Документировано';
+
+  @override
   String get addLessonButton => 'Добавить урок';
 
   @override
@@ -64,6 +76,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get lessonsFor => 'Уроки';
+
+  @override
+  String get lesson => 'Урок';
 
   @override
   String get noLessonsToday => 'Нет уроков в этот день';

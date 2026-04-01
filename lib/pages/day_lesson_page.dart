@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:norm_journal/constant_subjects.dart';
 import 'package:norm_journal/pages/attendance_page.dart';
 import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:norm_journal/data/repository/schedule_repository.dart';
@@ -101,7 +102,9 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
                 _buildDateHeader(l10n),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: lessonNames.isEmpty ? _buildEmptyState(l10n) : _buildLessonList(),
+                  child: lessonNames.isEmpty 
+                  ? _buildEmptyState(l10n) 
+                  : _buildLessonList(),
                 ),
               ],
             ),
@@ -142,7 +145,7 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
       itemBuilder: (context, index) {
         final lessonName = lessonNames[index];
         final realLessonIndex = allDayLessons.indexOf(lessonName);
-        
+        final l10n = AppLocalizations.of(context)!;
         return Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
           child: InkWell(
@@ -185,7 +188,7 @@ class _DayLessonsPageState extends State<DayLessonsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          lessonName,
+                          ConstantSubjects.getTranslatedSubject(lessonName, l10n),
                           style: const TextStyle(
                             fontSize: 17, 
                             fontWeight: FontWeight.w600, 
