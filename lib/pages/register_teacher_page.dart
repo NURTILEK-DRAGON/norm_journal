@@ -29,7 +29,7 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
       return PopupMenuButton<String>(
         icon: const Icon(
           Icons.language, 
-          color: Colors.white),
+          color: Colors.blueAccent),
         onSelected: (val) => widget.changeLanguage!(
           val == 'en' ? const Locale('en') : const Locale('ru'),
         ),
@@ -84,68 +84,96 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Colors.cyan[50],
-      appBar: AppBar(title:  Text(l10n.teacherRegistrationTitle), 
-      actions: [
-        _buildLanguagePicker()
-      ],
-      backgroundColor: Colors.blueAccent, foregroundColor: Colors.white),
-      body: Padding(
+      backgroundColor: const Color(0xFFF8FAFF),
+      appBar: AppBar(
+        title: Text(l10n.teacherRegistrationTitle, 
+        style: const TextStyle(fontWeight: FontWeight.bold)),
+        actions: [_buildLanguagePicker()],
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.blueAccent,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.assignment_ind, size: 80, color: Colors.blueAccent),
-              const SizedBox(height: 24),
+              Center(child: Icon(Icons.school_rounded, size: 70, color: Colors.blueAccent.withOpacity(0.8))),
+              const SizedBox(height: 32),
+              
+              _buildInputLabel(l10n.fullName),
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: l10n.fullName, 
-                  border: OutlineInputBorder(), 
-                  prefixIcon: Icon(Icons.person)),
+                decoration: _inputDecoration(l10n.fullName, Icons.person_outline),
                 validator: (v) => v!.isEmpty ? l10n.enterFullName : null,
               ),
-              const SizedBox(height: 20),
-              Text(l10n.selectSubjects, style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white, 
-                    borderRadius: BorderRadius.circular(8), 
-                    border: Border.all(color: Colors.grey.shade300)),
-                  child: ListView.builder(
+              
+              const SizedBox(height: 24),
+              _buildInputLabel(l10n.selectSubjects),
+              Container(
+                height: 300,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.blueAccent.withOpacity(0.1)),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: ListView.separated(
                     itemCount: ConstantSubjects.subjects.length,
+                    separatorBuilder: (_, _) => Divider(height: 1, color: Colors.grey[100]),
                     itemBuilder: (context, index) {
                       final s = ConstantSubjects.subjects[index];
+                      final isSelected = _selectedSubjects.contains(s);
                       return CheckboxListTile(
+                        activeColor: Colors.blueAccent,
                         title: Text(ConstantSubjects.getTranslatedSubject(s, l10n)),
-                        value: _selectedSubjects.contains(s),
-                        onChanged: (val) => setState(() => val! 
-                        ? _selectedSubjects.add(s) 
-                        : _selectedSubjects.remove(s)),
+                        value: isSelected,
+                        onChanged: (val) => setState(() => val! ? _selectedSubjects.add(s) : _selectedSubjects.remove(s)),
                       );
                     },
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
-                height: 55,
+                height: 60,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent, 
-                    foregroundColor: Colors.white),
+                    backgroundColor: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 5,
+                    shadowColor: Colors.blueAccent.withOpacity(0.4),
+                  ),
                   onPressed: _register,
-                  child: Text(l10n.register, style: TextStyle(fontSize: 16)),
+                  child: Text(l10n.register, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildInputLabel(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      child: Text(text, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black54)),
+    );
+  }
+
+  InputDecoration _inputDecoration(String hint, IconData icon) {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      prefixIcon: Icon(icon, color: Colors.blueAccent),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Colors.blueAccent, width: 2)),
     );
   }
 }

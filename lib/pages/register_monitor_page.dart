@@ -30,7 +30,9 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
 
    Widget _buildLanguagePicker() {
     return PopupMenuButton<String>(
-      icon: const Icon(Icons.language, color: Colors.blueAccent),
+      icon: const Icon(
+        Icons.language, 
+        color: Colors.green),
       onSelected: (val) => widget.changeLanguage!(
         val == 'en' ? const Locale('en') : const Locale('ru'),
       ),
@@ -93,53 +95,82 @@ class _RegisterMonitorPageState extends State<RegisterMonitorPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Colors.cyan[50],
+      backgroundColor: const Color(0xFFF7FAF7),
       appBar: AppBar(
-        title: const Text('Регистрация старосты'), 
+        title: const Text(
+        'Регистрация старосты', 
+        style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [_buildLanguagePicker()],
-        backgroundColor: Colors.green, foregroundColor: Colors.white),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.green,
+        elevation: 0,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              const Icon(Icons.person_add, size: 80, color: Colors.green),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
+              CircleAvatar(
+                radius: 45,
+                backgroundColor: Colors.green.withOpacity(0.1),
+                child: const Icon(Icons.group_add_rounded, size: 50, color: Colors.green),
+              ),
+              const SizedBox(height: 40),
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: l10n.fullName, 
-                  border: OutlineInputBorder(), 
-                  prefixIcon: Icon(Icons.person)),
+                decoration: _inputDecoration(
+                  l10n.fullName, Icons.person_outline, Colors.green),
                 validator: (v) => v!.isEmpty ? l10n.enterFullName : null,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _groupController,
-                decoration: InputDecoration(
-                  labelText: l10n.groupNameLabel, 
-                  hintText: l10n.groupNameHint, 
-                  border: OutlineInputBorder(), 
-                  prefixIcon: Icon(Icons.group)),
+                decoration: _inputDecoration(
+                  l10n.groupNameLabel, 
+                  Icons.diversity_3_outlined, Colors.green),
                 validator: (v) => v!.isEmpty ? l10n.enterGroupName : null,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 40),
               SizedBox(
                 width: double.infinity,
-                height: 55,
+                height: 60,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green, 
-                    foregroundColor: Colors.white),
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 5,
+                    shadowColor: Colors.green.withOpacity(0.4),
+                  ),
                   onPressed: _register,
-                  child:  Text(l10n.register, style: TextStyle(fontSize: 16)),
+                  child: Text(
+                    l10n.register, 
+                    style: const TextStyle(
+                      fontSize: 18, 
+                      fontWeight: FontWeight.bold, 
+                      color: Colors.white)),
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  InputDecoration _inputDecoration(String label, IconData icon, Color color) {
+    return InputDecoration(
+      labelText: label,
+      filled: true,
+      fillColor: Colors.white,
+      prefixIcon: Icon(icon, color: color),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16), 
+        borderSide: BorderSide.none),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16), 
+        borderSide: BorderSide(color: color, width: 2)),
     );
   }
 }
