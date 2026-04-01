@@ -40,25 +40,25 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
       );
     }
 
-  Future<void> _register() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    if (_selectedSubjects.isEmpty) {
-      ScaffoldMessenger.of(context)
-      .showSnackBar(const SnackBar(content: Text('Выберите хотя бы один предмет')));
-      return;
-    }
-
-    try{
+ Future<void> _register() async {
+  if (!_formKey.currentState!.validate()) return;
+  if (_selectedSubjects.isEmpty) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Выберите хотя бы один предмет')));
+    return;
+  }
+  try {
+    // 1. Извлекаем имя и чистим его от лишних пробелов
+    final String teacherName = _nameController.text.trim();
     await _firestoreService.saveTeacher(
-     name:  _nameController.text.trim(),
-     subjects: _selectedSubjects,);
-
+      name: teacherName,
+      subjects: _selectedSubjects,
+    );
     await UserPreferences.saveUser(
       true, 
-      "Teacher", 
-      subjects: _selectedSubjects);
-
+      teacherName, // Уникальный ID расписания
+      subjects: _selectedSubjects,
+    );
     if (mounted) {
       Navigator.pushAndRemoveUntil(
         context,
@@ -71,14 +71,14 @@ class _RegisterTeacherPageState extends State<RegisterTeacherPage> {
         (route) => false,
       );
     }
-  }catch(e){
-      if (mounted) {
+  } catch (e) {
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка регистрации: $e')),
       );
     }
   }
-  }
+ }
 
   @override
   Widget build(BuildContext context) {
