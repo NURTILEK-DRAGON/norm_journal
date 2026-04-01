@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -5,6 +7,8 @@ import 'package:norm_journal/l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:norm_journal/constant_subjects.dart';
+import 'package:norm_journal/data/utils/user_preferences.dart';
+import 'package:norm_journal/data/data_source/remote_schedule_data_source.dart';
 
 class DaySchedulePage extends StatefulWidget {
   final String day;
@@ -20,6 +24,7 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
   late List<String> lessons;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final Logger _logger = Logger(printer: PrettyPrinter());
+  final RemoteScheduleDataSource _remoteScheduleDataSource = RemoteScheduleDataSource();
 
   @override
   void initState() {
@@ -43,10 +48,14 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
       builder: (context) => _buildSubjectDialog(l10n, l10n.addLessonButton, selectedSubject),
     );
 
-    if (newName != null && context.mounted) {
+    if (newName != null) {
       setState(() {
         lessons.add(newName);
-        _listKey.currentState?.insertItem(lessons.length - 1);
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_listKey.currentState != null) {
+          _listKey.currentState?.insertItem(lessons.length - 1, duration: const Duration(milliseconds: 300));
+        }
       });
     }
   }
@@ -112,16 +121,18 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
       body: Column(
         children: [
           Expanded(
-            child: lessons.isEmpty 
-              ? _buildEmptyState(l10n)
-              : AnimatedList(
-                  key: _listKey,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  initialItemCount: 0, 
-                  itemBuilder: (context, index, animation) {
-                    return _buildLessonCard(index, animation, l10n);
-                  },
+           child: Stack(
+            children: [
+              AnimatedList(
+                key: _listKey,
+                initialItemCount: 0,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                itemBuilder: (context, index, animation) => 
+                _buildLessonCard(index, animation, l10n),
                 ),
+                if(lessons.isEmpty) _buildEmptyState(l10n),
+            ],
+           ),
           ),
           if (lessons.length < 10) _buildAddButton(l10n),
         ],
@@ -268,24 +279,42 @@ class _DaySchedulePageState extends State<DaySchedulePage> {
     if (newName != null) setState(() => lessons[index] = newName);
   }
 
-  Future<void> _saveLessons() async {
+ Future<void> _saveLessons() async {
     try {
+      final String id = await UserPreferences.getGroupId();
+
+      // 1. Локально в SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('schedule_${widget.day}', jsonEncode(lessons));
-      // ignore: use_build_context_synchronously
-      if (context.mounted) Navigator.pop(context, lessons);
+
+      // 2. В Firebase (Firestore)
+      // Сначала получаем весь текущий график группы
+      Map<String, List<String>> currentFullSchedule = await _remoteScheduleDataSource.getSchedule(id);
+      
+      // Обновляем только текущий день (приводим к нижнему регистру для надежности ключа)
+      currentFullSchedule[widget.day.toLowerCase()] = lessons;
+
+      // Отправляем обратно в облако
+      await _remoteScheduleDataSource.saveSchedule(id, currentFullSchedule);
+
+      _logger.i('Данные сохранены для группы/учителя: $id');
+
+      if (context.mounted) {
+        Fluttertoast.showToast(
+          msg: AppLocalizations.of(context)!.savedSuccessfully,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+        );
+        Navigator.pop(context, lessons);
+      }
     } catch (e) {
-      _logger.e('Error saving: $e');
+      _logger.e('Ошибка сохранения: $e');
+      Fluttertoast.showToast(msg: "Ошибка сохранения в облако!");
     }
   }
 
   void _onSavedButtonPressed() {
     _saveLessons();
-    Fluttertoast.showToast(
-      msg: AppLocalizations.of(context)!.savedSuccessfully,
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-    );
   }
 }
 
